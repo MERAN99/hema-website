@@ -3,9 +3,12 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowDown, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { scrollToId } from '../hooks/useSmoothScroll';
-import { img } from '../data/company';
+import { imgSet } from '../data/company';
 import { ButtonLink } from './ui/Button';
 import { Counter } from './ui/Counter';
+
+// On portrait screens the 3:2 photo is cropped to fill the height, so it needs more pixels than 100vw.
+const HERO_SIZES = '(max-aspect-ratio: 3/2) 60vh, 100vw';
 
 export function Hero() {
   const { t, lang } = useLanguage();
@@ -28,7 +31,7 @@ export function Hero() {
   return (
     <section id="top" ref={ref} className="grain relative isolate min-h-[100svh] overflow-hidden bg-navy-deep">
       <motion.div className="absolute inset-0 -z-10" style={reduce ? undefined : { y: bgY, scale: bgScale }}>
-        <img src={img('hero-road.jpg')} alt="" className="h-full w-full object-cover object-center" />
+        <img {...imgSet('hero-road.jpg', HERO_SIZES)} {...{ fetchpriority: 'high' }} alt="" className="h-full w-full object-cover object-center" />
       </motion.div>
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-navy-deep/80 via-navy-deep/55 to-navy-deep" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-deep/85 via-navy-deep/30 to-transparent rtl:bg-gradient-to-l" />

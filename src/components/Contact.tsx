@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ExternalLink, Globe, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { contact, img } from '../data/company';
+import { contact, parallaxSet } from '../data/company';
 import { cn } from '../lib';
 import { ParallaxImage } from './ui/ParallaxImage';
 import { Reveal } from './ui/Reveal';
@@ -82,7 +82,7 @@ export function Contact() {
               </Reveal>
             ))}
           </div>
-          <ParallaxImage src={img('baban-1.jpg')} alt="" speed={14} className="mt-3 hidden aspect-[16/7] rounded-2xl opacity-80 lg:block" />
+          <ParallaxImage {...parallaxSet('baban-1.jpg', '(min-width: 1024px) 45vw, 1px')} alt="" speed={14} className="mt-3 hidden aspect-[16/7] rounded-2xl opacity-80 lg:block" />
         </div>
 
         <Reveal delay={0.1}>

@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { fleet, fleetBrands, img } from '../data/company';
+import { fleet, fleetBrands, imgSet } from '../data/company';
 import { Counter } from './ui/Counter';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
@@ -18,7 +18,7 @@ export function Fleet() {
   return (
     <section id="fleet" ref={ref} className="grain relative isolate overflow-hidden bg-navy py-24 text-white md:py-32">
       <motion.div aria-hidden className="absolute -inset-y-[20%] end-0 -z-10 hidden w-1/2 opacity-25 lg:block" style={reduce ? undefined : { y: imgY }}>
-        <img src={img('baban-4.jpg')} alt="" loading="lazy" className="h-full w-full object-cover" />
+        <img {...imgSet('baban-4.jpg', '50vw')} alt="" loading="lazy" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-navy to-transparent rtl:bg-gradient-to-l" />
       </motion.div>
 

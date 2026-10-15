@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Calendar, Handshake, Images, MapPin, Ruler, Wallet } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { featuredProjects, img, type FeaturedProject } from '../data/company';
+import { featuredProjects, img, imgSet, parallaxSet, type FeaturedProject } from '../data/company';
 import { cn } from '../lib';
 import { Lightbox } from './ui/Lightbox';
 import { ParallaxImage } from './ui/ParallaxImage';
@@ -41,7 +41,7 @@ function ProjectRow({ project, index, onOpen }: { project: FeaturedProject; inde
           0{index + 1}
         </motion.span>
         <ParallaxImage
-          src={img(project.images[0])}
+          {...parallaxSet(project.images[0], '(min-width: 1024px) 50vw, 92vw')}
           alt={project.title[lang]}
           speed={10}
           onClick={() => onOpen(0)}
@@ -57,7 +57,7 @@ function ProjectRow({ project, index, onOpen }: { project: FeaturedProject; inde
           )}
           aria-label={project.title[lang]}
         >
-          <img src={img(project.images[1])} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 hover:scale-105" />
+          <img {...imgSet(project.images[1], '(min-width: 1024px) 22vw, 40vw')} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 hover:scale-105" />
         </motion.button>
         <motion.button
           type="button"
@@ -66,7 +66,7 @@ function ProjectRow({ project, index, onOpen }: { project: FeaturedProject; inde
           className={cn('absolute top-10 hidden aspect-square w-[24%] overflow-hidden rounded-2xl border-4 border-background shadow-xl md:block', flip ? '-end-8' : '-start-8')}
           aria-label={project.title[lang]}
         >
-          <img src={img(project.images[2])} alt="" loading="lazy" className="h-full w-full object-cover" />
+          <img {...imgSet(project.images[2], '(min-width: 1024px) 12vw, 24vw')} alt="" loading="lazy" className="h-full w-full object-cover" />
         </motion.button>
       </div>
 

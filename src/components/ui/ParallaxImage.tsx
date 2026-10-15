@@ -4,6 +4,8 @@ import { cn } from '../../lib';
 
 type Props = {
   src: string;
+  /** Extra <img> attributes such as srcSet, sizes, width and height (see imgSet). */
+  imgProps?: Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'style' | 'src' | 'alt' | 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart'>;
   alt: string;
   className?: string;
   imgClassName?: string;
@@ -13,7 +15,7 @@ type Props = {
 };
 
 /** A cropped frame whose photo moves slower than the page, giving depth while scrolling. */
-export function ParallaxImage({ src, alt, className, imgClassName, speed = 12, onClick }: Props) {
+export function ParallaxImage({ src, alt, className, imgClassName, imgProps, speed = 12, onClick }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
@@ -27,6 +29,7 @@ export function ParallaxImage({ src, alt, className, imgClassName, speed = 12, o
         className="group absolute inset-0 block h-full w-full cursor-pointer"
       >
         <motion.img
+          {...imgProps}
           src={src}
           alt={alt}
           loading="lazy"

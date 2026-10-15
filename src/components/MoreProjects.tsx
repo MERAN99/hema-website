@@ -2,14 +2,14 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { img, moreProjects, type SmallProject } from '../data/company';
+import { imgSet, moreProjects, type SmallProject } from '../data/company';
 import { SectionHeading } from './ui/SectionHeading';
 
 function Card({ p }: { p: SmallProject }) {
   const { lang } = useLanguage();
   return (
     <article className="group relative aspect-[3/4] w-[78vw] shrink-0 snap-start overflow-hidden rounded-[1.75rem] bg-navy sm:w-[46vw] lg:h-[min(62vh,36rem)] lg:w-auto">
-      <img src={img(p.image)} alt={p.title[lang]} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+      <img {...imgSet(p.image, '(min-width: 1024px) 45vw, (min-width: 640px) 82vw, 140vw')} alt={p.title[lang]} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
       <div className="absolute inset-0 bg-gradient-to-t from-navy-deep via-navy-deep/30 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-6">
         <p className="mb-2 inline-flex rounded-full bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">{p.period}</p>

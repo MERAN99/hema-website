@@ -1,8 +1,31 @@
 import type { Lang } from '../i18n/translations';
+import { imageSizes } from './imageSizes';
 
 type L10n = Record<Lang, string>;
 
-export const img = (name: string) => `./images/${name}`;
+const stem = (name: string) => name.replace(/\.(jpe?g|png|webp)$/i, '');
+
+/** URL of the full-size WebP version of a photo in public/images. */
+export const img = (name: string) => `./images/${stem(name)}.webp`;
+
+/**
+ * Responsive <img> attributes: srcset of the generated WebP widths, so phones download small files,
+ * plus the intrinsic width/height that reserve space and prevent layout shift.
+ */
+export function imgSet(name: string, sizes: string) {
+  const s = stem(name);
+  const e = imageSizes[s];
+  if (!e) return { src: img(name) };
+  const url = (w: number) => (w === e.w ? `./images/${s}.webp` : `./images/${s}-${w}.webp`);
+  return {
+    src: url(e.widths.includes(960) ? 960 : e.w),
+    srcSet: e.widths.map((w) => `${url(w)} ${w}w`).join(', '),
+    sizes,
+    width: e.w,
+    height: e.h,
+    decoding: 'async' as const,
+  };
+}
 
 export const contact = {
   phones: ['07701557702', '07701530375'],
@@ -248,3 +271,9 @@ export const team: { icon: TeamIcon; role: L10n; name: L10n }[] = [
 ];
 
 export const certificates = ['cert-1.jpg', 'cert-2.jpg', 'cert-3.jpg', 'cert-4.jpg', 'cert-5.jpg'];
+
+/** imgSet split into the shape ParallaxImage expects ({ src, imgProps }). */
+export function parallaxSet(name: string, sizes: string) {
+  const { src, ...imgProps } = imgSet(name, sizes);
+  return { src, imgProps };
+}

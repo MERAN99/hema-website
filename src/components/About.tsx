@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Award, Building2, CheckCircle2, Landmark, MapPin } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { img } from '../data/company';
+import { imgSet, parallaxSet } from '../data/company';
 import { ParallaxImage } from './ui/ParallaxImage';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
@@ -26,9 +26,10 @@ export function About() {
     <section id="about" className="relative overflow-hidden py-24 md:py-32">
       <div className="container-x grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
         <div ref={ref} className="relative order-2 lg:order-1">
-          <ParallaxImage src={img('engineers.jpg')} alt="" speed={10} className="aspect-[4/5] rounded-[2rem] shadow-2xl shadow-navy/20 sm:aspect-[5/4] lg:aspect-[4/5]" />
+          <ParallaxImage {...parallaxSet('engineers.jpg', '(min-width: 1024px) 85vw, 100vw')} alt="" speed={10} className="aspect-[4/5] rounded-[2rem] shadow-2xl shadow-navy/20 sm:aspect-[5/4] lg:aspect-[4/5]" />
           <motion.img
-            src={img('infinity-road.png')}
+            {...imgSet('infinity-road.png', '(min-width: 1024px) 320px, (min-width: 640px) 288px, 224px')}
+            loading="lazy"
             alt=""
             aria-hidden
             style={reduce ? undefined : { y: floatY, rotate }}
@@ -57,10 +58,12 @@ export function About() {
           </Reveal>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             {t.about.highlights.map((h, i) => (
-              <Reveal key={h} delay={0.05 * i} className="flex gap-3 rounded-2xl border border-border bg-surface p-4">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brass" />
-                <span className="text-[15px] leading-snug text-foreground">{h}</span>
-              </Reveal>
+              <li key={h}>
+                <Reveal delay={0.05 * i} className="flex h-full gap-3 rounded-2xl border border-border bg-surface p-4">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brass" />
+                  <span className="text-[15px] leading-snug text-foreground">{h}</span>
+                </Reveal>
+              </li>
             ))}
           </ul>
         </div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BadgeCheck, ZoomIn } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { certificates, img } from '../data/company';
+import { certificates, img, imgSet } from '../data/company';
 import { Lightbox } from './ui/Lightbox';
 import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
@@ -26,7 +26,7 @@ export function Certificates() {
                 aria-label={`${t.certs.open}: ${t.certs.caption}`}
                 className="group relative block h-full w-full overflow-hidden rounded-2xl border border-border bg-background p-2"
               >
-                <img src={img(c)} alt={t.certs.caption} loading="lazy" className="h-full max-h-80 w-full rounded-xl object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]" />
+                <img {...imgSet(c, '(min-width: 1024px) 20vw, 45vw')} alt={t.certs.caption} loading="lazy" className="h-full max-h-80 w-full rounded-xl object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]" />
                 <span className="absolute inset-0 grid place-items-center bg-navy/0 opacity-0 transition-all group-hover:bg-navy/40 group-hover:opacity-100">
                   <ZoomIn className="h-8 w-8 text-white" />
                 </span>

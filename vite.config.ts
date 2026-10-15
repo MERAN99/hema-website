@@ -5,4 +5,16 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: './',
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        // Libraries change rarely, so keeping them in their own files lets browsers reuse them from cache.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          motion: ['framer-motion'],
+          vendor: ['lenis', 'lucide-react'],
+        },
+      },
+    },
+  },
 });

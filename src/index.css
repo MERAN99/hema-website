@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Fallback fonts sized to match Inter and Sora, so text keeps the same footprint while the web fonts
+ * download and nothing jumps when they swap in (prevents layout shift).
+ */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 107.48%;
+  ascent-override: 90.14%;
+  descent-override: 22.44%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Sora Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 117%;
+  ascent-override: 82.9%;
+  descent-override: 24.79%;
+  line-gap-override: 0%;
+}
+
 :root {
   /* Brand palette taken from the Hema catalogue: deep navy, amber and brass. */
   --background: 248 246 241;
@@ -17,8 +38,8 @@
   --accent: 232 160 32;
   --brass: 185 141 69;
 
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-display: 'Sora', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', 'Inter Fallback', system-ui, sans-serif;
+  --font-display: 'Sora', 'Sora Fallback', system-ui, sans-serif;
 }
 
 /* Kurdish (Sorani) and Arabic use fonts built for Arabic script. */

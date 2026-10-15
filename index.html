@@ -8,11 +8,32 @@
     <link rel="icon" type="image/png" href="./images/logo-mark.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts load without blocking the first paint; text shows in a system font until they arrive (display=swap). -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" /></noscript>
+    <!-- The hero photo is the largest thing on screen: start downloading the right size immediately. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="./images/hero-road-1600.webp"
+      imagesrcset="./images/hero-road-480.webp 480w, ./images/hero-road-960.webp 960w, ./images/hero-road-1600.webp 1600w, ./images/hero-road.webp 2400w"
+      imagesizes="(max-aspect-ratio: 3/2) 60vh, 100vw"
+      fetchpriority="high"
     />
-    <title>Hema Company</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hema Company" />
+    <meta property="og:title" content="Hema Company | General Contracting, Roads &amp; Infrastructure" />
+    <meta property="og:description" content="Grade 1 general contractor building roads, buildings, water networks and bridges across the Kurdistan Region and Iraq since 2004." />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hema Company | General Contracting, Roads &amp; Infrastructure" />
+    <meta name="twitter:description" content="Grade 1 general contractor building roads, buildings, water networks and bridges across the Kurdistan Region and Iraq since 2004." />
+    <meta name="twitter:image" content="/og-image.jpg" />
+    <title>Hema Company | General Contracting, Roads &amp; Infrastructure</title>
   </head>
   <body>
     <div id="root"></div>

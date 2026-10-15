@@ -7,6 +7,7 @@ const links = ['about', 'services', 'projects', 'fleet', 'team', 'contact'] as c
 
 export function Footer() {
   const { t } = useLanguage();
+  const [before, after] = t.footer.credit.split('{name}');
   return (
     <footer className="relative bg-navy-deep text-white">
       <div aria-hidden className="flex h-7 items-center bg-[#1c1f22]">
@@ -49,9 +50,19 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="container-x flex flex-col items-center justify-between gap-4 py-6 text-sm text-white/50 sm:flex-row">
-          <p>
-            © {new Date().getFullYear()} {t.brand.name} {t.brand.tagline}. {t.footer.rights}
-          </p>
+          <div className="space-y-1 text-center sm:text-start">
+            <p>
+              © {new Date().getFullYear()} {t.brand.name} {t.brand.tagline.replace(/\.$/, '')}. {t.footer.rights}
+            </p>
+            <p className="text-white/60">
+              {before}
+              {/* <bdi> keeps the Latin brand name in the right order inside Kurdish and Arabic sentences. */}
+              <bdi dir="ltr" className="font-semibold text-white/70">
+                DAAR AI
+              </bdi>
+              {after}
+            </p>
+          </div>
           <button type="button" onClick={() => scrollToId('top')} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 px-4 text-white/80 hover:bg-white/10">
             <ArrowUp className="h-4 w-4" />
             {t.footer.top}

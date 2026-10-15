@@ -164,6 +164,7 @@ const en = {
     rights: 'All rights reserved.',
     blurb: 'General contracting for roads, buildings, water networks and bridges in the Kurdistan Region and Iraq since 2004.',
     top: 'Back to top',
+    credit: 'This website is developed by {name}',
   },
   lightbox: { close: 'Close', next: 'Next photo', prev: 'Previous photo' },
 };
@@ -328,6 +329,7 @@ const ku: Dict = {
     rights: 'هەموو مافەکان پارێزراون.',
     blurb: 'بەڵێندەرایەتی گشتی بۆ ڕێگاوبان، بینا، تۆڕی ئاو و پرد لە هەرێمی کوردستان و عێراق لە ساڵی 2004ەوە.',
     top: 'گەڕانەوە بۆ سەرەوە',
+    credit: 'ئەم ماڵپەڕە لەلایەن {name} پەرەی پێدراوە',
   },
   lightbox: { close: 'داخستن', next: 'وێنەی دواتر', prev: 'وێنەی پێشوو' },
 };
@@ -490,6 +492,7 @@ const ar: Dict = {
     rights: 'جميع الحقوق محفوظة.',
     blurb: 'مقاولات عامة للطرق والمباني وشبكات المياه والجسور في إقليم كوردستان والعراق منذ عام 2004.',
     top: 'العودة للأعلى',
+    credit: 'تم تطوير هذا الموقع بواسطة {name}',
   },
   lightbox: { close: 'إغلاق', next: 'الصورة التالية', prev: 'الصورة السابقة' },
 };

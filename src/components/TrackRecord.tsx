@@ -50,8 +50,8 @@ export function TrackRecord() {
         <ol className="relative mt-12 space-y-4 md:hidden">
           <span aria-hidden className="lane-dash absolute bottom-2 start-[1.15rem] top-2 w-[3px] rounded-full opacity-70" />
           {trackRecord.map((r, i) => (
-            <Reveal key={i} y={20} className="relative ps-12">
-              <li>
+            <li key={i}>
+              <Reveal y={20} className="relative ps-12">
                 <span className="absolute start-0 top-4 grid h-10 w-10 place-items-center rounded-full bg-navy font-display text-xs font-bold text-accent ring-4 ring-background">
                   {String(i + 1).padStart(2, '0')}
                 </span>
@@ -63,8 +63,8 @@ export function TrackRecord() {
                     <span className="font-semibold text-foreground">{money(r.value, r.currency)}</span>
                   </div>
                 </div>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ol>
       </div>

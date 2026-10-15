@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Quote } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { img } from '../data/company';
+import { imgSet } from '../data/company';
 import { Reveal } from './ui/Reveal';
 
 export function Vision() {
@@ -25,7 +25,7 @@ export function Vision() {
   return (
     <section ref={ref} className="grain relative isolate overflow-hidden bg-navy-deep py-28 md:py-40">
       <motion.div className="absolute -inset-y-[25%] inset-x-0 -z-10" style={reduce ? undefined : { y }}>
-        <img src={img('asphalt-wide.jpg')} alt="" loading="lazy" className="h-full w-full object-cover" />
+        <img {...imgSet('asphalt-wide.jpg', '100vw')} alt="" loading="lazy" className="h-full w-full object-cover" />
       </motion.div>
       <div className="absolute inset-0 -z-10 bg-navy-deep/80" />
       <div className="container-x">

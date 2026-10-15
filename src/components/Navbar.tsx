@@ -33,7 +33,7 @@ function LanguageMenu({ solid, onOpen }: { solid: boolean; onOpen?: () => void }
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={t.nav.language}
+        aria-label={`${current.label} (${t.nav.language})`}
         onClick={() => {
           if (!open) onOpen?.();
           setOpen((o) => !o);
