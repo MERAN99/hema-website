@@ -51,15 +51,16 @@ export function Hero() {
           {t.hero.eyebrow}
         </motion.p>
 
-        <h1 key={`h1-${lang}`} className="max-w-4xl font-display text-[2.6rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl rtl:text-[2.1rem] rtl:leading-[1.4] rtl:tracking-normal rtl:sm:text-5xl rtl:lg:text-[3.6rem]">
+        <h1 key={`h1-${lang}`} className="max-w-4xl font-display text-[2.6rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl rtl:text-[2.1rem] rtl:leading-[1.5] rtl:tracking-normal rtl:sm:text-5xl rtl:lg:text-[3.6rem]">
           {[...words(t.hero.titleA), '\n', ...words(t.hero.titleB)].map((w, i) =>
             w === '\n' ? (
               <br key={i} />
             ) : (
-              <span key={i} className="inline-block overflow-hidden pb-1 align-bottom">
+              // Vertical padding (offset by negative margin) gives the reveal mask room for accents and dots above and below Kurdish/Arabic letters.
+              <span key={i} className="-my-[0.15em] inline-block overflow-hidden py-[0.15em] align-bottom rtl:-my-[0.35em] rtl:py-[0.35em]">
                 <motion.span
                   className={`inline-block ${i > words(t.hero.titleA).length ? 'text-accent' : ''}`}
-                  initial={reduce ? false : { y: '110%' }}
+                  initial={reduce ? false : { y: '160%' }}
                   animate={{ y: 0 }}
                   transition={{ duration: 0.8, delay: 0.15 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 >
