@@ -13,6 +13,10 @@ npm run preview   # serve the production build
 
 The `dist/` folder is a static site: upload it to any host (Netlify, Vercel, cPanel, S3). Asset paths are relative, so it also works from a sub-folder.
 
+## Deploy on Netlify
+
+`netlify.toml` holds the build settings (`npm run build`, publish `dist`, Node 20), cache headers and basic security headers. In Netlify choose **Add new site → Import an existing project → GitHub**, pick this repository and click **Deploy**; every push to `main` then redeploys automatically.
+
 ## Languages
 
 - Switch with the globe menu in the header. The choice is remembered in the browser.
