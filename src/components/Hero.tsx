@@ -39,7 +39,7 @@ export function Hero() {
       {/* Lane marking that drifts as you scroll: the brand's road motif. */}
       <motion.div aria-hidden className="lane-dash absolute bottom-0 end-[8%] top-0 hidden w-1.5 opacity-60 md:block" style={reduce ? undefined : { y: laneY, height: '200%' }} />
 
-      <motion.div style={reduce ? undefined : { y: textY, opacity: textOpacity }} className="container-x flex min-h-[100svh] flex-col justify-center pb-56 pt-32 md:pb-48">
+      <motion.div style={reduce ? undefined : { y: textY, opacity: textOpacity }} className="container-x flex min-h-[100svh] flex-col justify-center pb-[17rem] pt-32 md:pb-48">
         <motion.p
           key={`eyebrow-${lang}`}
           initial={{ opacity: 0, y: 16 }}
@@ -51,7 +51,7 @@ export function Hero() {
           {t.hero.eyebrow}
         </motion.p>
 
-        <h1 key={`h1-${lang}`} className="max-w-4xl font-display text-[2.6rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl rtl:text-[2.1rem] rtl:leading-[1.5] rtl:tracking-normal rtl:sm:text-5xl rtl:lg:text-[3.6rem]">
+        <h1 key={`h1-${lang}`} className="max-w-4xl font-display text-[2.6rem] font-extrabold leading-[1.15] tracking-tight text-white sm:text-6xl sm:leading-[1.15] lg:text-7xl lg:leading-[1.15] rtl:text-[2.1rem] rtl:leading-[1.7] rtl:tracking-normal rtl:sm:text-5xl rtl:sm:leading-[1.7] rtl:lg:text-[3.6rem] rtl:lg:leading-[1.7]">
           {[...words(t.hero.titleA), '\n', ...words(t.hero.titleB)].map((w, i) =>
             w === '\n' ? (
               <br key={i} />
