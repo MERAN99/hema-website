@@ -103,7 +103,8 @@ export function Hero() {
               <div key={s.label} className={`px-5 py-5 md:px-7 md:py-7 ${i % 2 === 1 ? 'border-s border-white/10' : ''} ${i >= 2 ? 'border-t border-white/10 md:border-t-0' : ''} ${i === 2 ? 'md:border-s' : ''}`}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd className="font-display text-3xl font-bold text-white md:text-4xl">
-                  <Counter value={s.value} suffix={s.suffix} isYear={s.value > 1900} />
+                  {/* Start counting once the stats bar has faded in (it appears 0.9s after load), one after another. */}
+                  <Counter value={s.value} suffix={s.suffix} isYear={s.value > 1900} delay={1.2 + i * 0.15} duration={2} />
                 </dd>
                 <dd className="mt-1 text-sm text-white/65">{s.label}</dd>
               </div>
