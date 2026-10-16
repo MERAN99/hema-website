@@ -93,7 +93,7 @@ export function Contact() {
               <div className="sm:col-span-2">{input('phone', f.phone, { type: 'tel', autoComplete: 'tel' })}</div>
               {input('message', f.message, { textarea: true })}
             </div>
-            <button type="submit" className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 font-semibold text-primary-foreground transition hover:bg-[#f2b23c] active:scale-[0.99] sm:w-auto">
+            <button type="submit" className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 font-semibold text-primary-foreground transition hover:bg-[#3A6DBA] active:scale-[0.99] sm:w-auto">
               <Send className="h-4 w-4 rtl:-scale-x-100" />
               {f.send}
             </button>

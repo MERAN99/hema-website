@@ -147,7 +147,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             <LanguageMenu solid={scrolled} onOpen={() => setOpen(false)} />
-            <a href="#contact" onClick={go('contact')} className="hidden min-h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-[#f2b23c] md:inline-flex">
+            <a href="#contact" onClick={go('contact')} className="hidden min-h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-[#3A6DBA] md:inline-flex">
               {t.nav.cta}
             </a>
             <button
