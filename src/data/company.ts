@@ -261,7 +261,7 @@ export type TeamIcon = 'crown' | 'hardhat' | 'wallet' | 'scale' | 'chart' | 'tru
 
 export const team: { icon: TeamIcon; role: L10n; name: L10n }[] = [
   { icon: 'crown', role: { en: 'General Manager', ku: 'بەڕێوەبەری گشتی', ar: 'المدير العام' }, name: { en: 'Nariman Abdulrahman Ahmed', ku: 'نەریمان عبدالرحمن احمد', ar: 'نريمان عبدالرحمن أحمد' } },
-  { icon: 'hardhat', role: { en: 'Executive Director, Engineering', ku: 'بەڕێوەبەری جێبەجێکار، بەشی ئەندازیاری', ar: 'المدير التنفيذي، القسم الهندسي' }, name: { en: 'Jwtyar Rashed Kake Ameen', ku: 'جوتیار ڕاشد کاکە ئەمین', ar: 'جوتيار راشد كاكه أمين' } },
+  { icon: 'hardhat', role: { en: 'Executive Director, Engineering', ku: 'بەڕێوەبەری جێبەجێکار، بەشی ئەندازیاری', ar: 'المدير التنفيذي، القسم الهندسي' }, name: { en: 'Jwtyar Rashed Kake Ameen', ku: 'جوتیار ڕەشید کاکە ئەمین', ar: 'جوتيار رشيد كاكه أمين' } },
   { icon: 'wallet', role: { en: 'Finance Director', ku: 'بەڕێوەبەری دارایی', ar: 'المدير المالي' }, name: { en: 'Rawaz Nariman Abdulrahman', ku: 'ڕەوەز نەریمان عبدالرحمن', ar: 'رواز نريمان عبدالرحمن' } },
   { icon: 'scale', role: { en: 'Legal Advisor', ku: 'ڕاوێژکاری یاسایی', ar: 'المستشار القانوني' }, name: { en: 'Soran Rashid Abdulrahman', ku: 'سۆران ڕەشید عبدالرحمن', ar: 'سوران رشيد عبدالرحمن' } },
   { icon: 'chart', role: { en: 'Projects Director', ku: 'بەڕێوەبەری پڕۆژەکان', ar: 'مدير المشاريع' }, name: { en: 'Rawand Nariman Abdulrahman', ku: 'ڕەوەند نەریمان عبدالرحمن', ar: 'رواند نريمان عبدالرحمن' } },
