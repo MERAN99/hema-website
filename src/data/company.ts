@@ -28,9 +28,8 @@ export function imgSet(name: string, sizes: string) {
 }
 
 export const contact = {
-  phones: ['07701557702', '07701530375'],
+  phones: ['07701557702', '07701222351'],
   email: 'hemacompany12@gmail.com',
-  website: 'hema-company.com',
   mapUrl: 'https://www.google.com/maps/search/?api=1&query=Dargazen%2C+Sulaymaniyah%2C+Iraq',
 };
 
@@ -73,7 +72,7 @@ export const featuredProjects: FeaturedProject[] = [
   {
     id: 'kunamasi',
     images: ['kunamasi-1.jpg', 'kunamasi-2.jpg', 'kunamasi-3.jpg', 'kunamasi-4.jpg', 'kunamasi-5.jpg'],
-    title: { en: 'Kunamasi – Waisa Bridge Road', ku: 'ڕێگای کونەماسی بۆ پردی وەیسە', ar: 'طريق كونه ماسي – جسر ويسه' },
+    title: { en: 'Kunamasi – Waisa Bridge Road (Phase One)', ku: 'ڕێگای کونەماسی بۆ پردی وەیسە (قۆناغی یەکەم)', ar: 'طريق كونه ماسي – جسر ويسه (المرحلة الأولى)' },
     location: { en: 'Sulaymaniyah Governorate', ku: 'پارێزگای سلێمانی', ar: 'محافظة السليمانية' },
     summary: {
       en: 'Construction and asphalting of the mountain road from Kunamasi to the Waisa bridge, with retaining walls and culverts. We provided the full engineering and execution team, all materials and machinery, and our own crushing and asphalt plants.',
@@ -81,9 +80,9 @@ export const featuredProjects: FeaturedProject[] = [
       ar: 'إنشاء وتعبيد الطريق الجبلي من كونه ماسي إلى جسر ويسه مع الجدران الساندة والعبّارات. وفّرنا الفريق الهندسي والتنفيذي الكامل وجميع المواد والآليات، إضافة إلى الكسارة ومعمل الأسفلت.',
     },
     highlights: {
-      en: ['30 km of new mountain road', 'Retaining walls and culverts', 'On-site crushing and asphalt plants'],
-      ku: ['30 کم ڕێگای نوێی شاخاوی', 'دیواری ڕاگر و ئاوبار', 'کارگەی کەسارە و قیر لە شوێنی پڕۆژە'],
-      ar: ['30 كم من الطريق الجبلي الجديد', 'جدران ساندة وعبّارات', 'كسارة ومعمل أسفلت في الموقع'],
+      en: ['This project is phase one of the road', '30 km of new mountain road', 'Retaining walls and culverts', 'On-site crushing and asphalt plants'],
+      ku: ['ئەم پڕۆژەیە قۆناغی یەکەمی ڕێگاکەیە', '30 کم ڕێگای نوێی شاخاوی', 'دیواری ڕاگر و ئاوبار', 'کارگەی کەسارە و قیر لە شوێنی پڕۆژە'],
+      ar: ['هذا المشروع هو المرحلة الأولى من الطريق', '30 كم من الطريق الجبلي الجديد', 'جدران ساندة وعبّارات', 'كسارة ومعمل أسفلت في الموقع'],
     },
     length: '30 km',
     width: '7 m',
@@ -262,12 +261,12 @@ export type TeamIcon = 'crown' | 'hardhat' | 'wallet' | 'scale' | 'chart' | 'tru
 
 export const team: { icon: TeamIcon; role: L10n; name: L10n }[] = [
   { icon: 'crown', role: { en: 'General Manager', ku: 'بەڕێوەبەری گشتی', ar: 'المدير العام' }, name: { en: 'Nariman Abdulrahman Ahmed', ku: 'نەریمان عبدالرحمن احمد', ar: 'نريمان عبدالرحمن أحمد' } },
-  { icon: 'hardhat', role: { en: 'Executive Director, Engineering', ku: 'بەڕێوەبەری جێبەجێکار، بەشی ئەندازیاری', ar: 'المدير التنفيذي، القسم الهندسي' }, name: { en: 'Falah Hassan Mohammed', ku: 'فلاح حسن محمد', ar: 'فلاح حسن محمد' } },
+  { icon: 'hardhat', role: { en: 'Executive Director, Engineering', ku: 'بەڕێوەبەری جێبەجێکار، بەشی ئەندازیاری', ar: 'المدير التنفيذي، القسم الهندسي' }, name: { en: 'Jwtyar Rashed Kake Ameen', ku: 'جوتیار ڕاشد کاکە ئەمین', ar: 'جوتيار راشد كاكه أمين' } },
   { icon: 'wallet', role: { en: 'Finance Director', ku: 'بەڕێوەبەری دارایی', ar: 'المدير المالي' }, name: { en: 'Rawaz Nariman Abdulrahman', ku: 'ڕەوەز نەریمان عبدالرحمن', ar: 'رواز نريمان عبدالرحمن' } },
   { icon: 'scale', role: { en: 'Legal Advisor', ku: 'ڕاوێژکاری یاسایی', ar: 'المستشار القانوني' }, name: { en: 'Soran Rashid Abdulrahman', ku: 'سۆران ڕەشید عبدالرحمن', ar: 'سوران رشيد عبدالرحمن' } },
   { icon: 'chart', role: { en: 'Projects Director', ku: 'بەڕێوەبەری پڕۆژەکان', ar: 'مدير المشاريع' }, name: { en: 'Rawand Nariman Abdulrahman', ku: 'ڕەوەند نەریمان عبدالرحمن', ar: 'رواند نريمان عبدالرحمن' } },
   { icon: 'truck', role: { en: 'Logistics', ku: 'بەشی لۆجستی', ar: 'القسم اللوجستي' }, name: { en: 'Rahel Sarkawt Mohammed', ku: 'ڕەهێڵ سەرکەوت محمد', ar: 'راهيل سركوت محمد' } },
-  { icon: 'ruler', role: { en: 'Civil Engineering', ku: 'بەشی ئەندازیاری شارستانی', ar: 'قسم الهندسة المدنية' }, name: { en: 'Sarwar Mohammed Karim', ku: 'سەروەر محمد کریم', ar: 'سرور محمد كريم' } },
+  { icon: 'ruler', role: { en: 'Surveying Engineering', ku: 'ئەندازیاری ڕووپێوی', ar: 'هندسة المساحة' }, name: { en: 'Jamal Hassan Mohammad Amin', ku: 'جەمال حسن محمد ئەمین', ar: 'جمال حسن محمد أمين' } },
 ];
 
 export const certificates = ['cert-1.jpg', 'cert-2.jpg', 'cert-3.jpg', 'cert-4.jpg', 'cert-5.jpg'];

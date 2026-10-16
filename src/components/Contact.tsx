@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExternalLink, Globe, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { ExternalLink, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { contact, parallaxSet } from '../data/company';
 import { cn } from '../lib';
@@ -62,8 +62,7 @@ export function Contact() {
   };
 
   const cards = [
-    { icon: Phone, label: t.contact.phone, content: contact.phones.map((p) => <a key={p} href={`tel:${p}`} className="block hover:text-accent"><span dir="ltr">{p.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3')}</span></a>) },
-    { icon: Globe, label: t.contact.website, content: <span dir="ltr">{contact.website}</span> },
+    { icon: Phone, wide: true, label: t.contact.phone, content: contact.phones.map((p) => <a key={p} href={`tel:${p}`} className="block hover:text-accent"><span dir="ltr">{p.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3')}</span></a>) },
     { icon: Mail, wide: true, label: t.contact.email, content: <a href={`mailto:${contact.email}`} className="break-all hover:text-accent">{contact.email}</a> },
     { icon: MapPin, wide: true, label: t.contact.address, content: (<><span className="block">{t.contact.addressValue}</span><a href={contact.mapUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">{t.contact.map}<ExternalLink className="h-3.5 w-3.5" /></a></>) },
   ];
