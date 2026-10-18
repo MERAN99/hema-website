@@ -147,7 +147,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             <LanguageMenu solid={scrolled} onOpen={() => setOpen(false)} />
-            <a href="#contact" onClick={go('contact')} className="hidden min-h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:bg-[#3A6DBA] md:inline-flex">
+            <a href="#contact" onClick={go('contact')} className="hidden min-h-11 items-center rounded-full bg-accent px-5 text-sm font-semibold text-navy-deep transition hover:bg-white md:inline-flex">
               {t.nav.cta}
             </a>
             <button
@@ -201,7 +201,7 @@ export function Navbar() {
                 </motion.li>
               ))}
             </ul>
-            <a href="#contact" onClick={go('contact')} className="mt-6 flex min-h-12 items-center justify-center rounded-full bg-primary font-semibold text-primary-foreground">
+            <a href="#contact" onClick={go('contact')} className="mt-6 flex min-h-12 items-center justify-center rounded-full bg-accent font-semibold text-navy-deep transition hover:bg-white">
               {t.nav.cta}
             </a>
           </motion.nav>

@@ -10,7 +10,7 @@ export function Footer() {
   const [before, after] = t.footer.credit.split('{name}');
   return (
     <footer className="relative bg-navy-deep text-white">
-      <div aria-hidden className="flex h-7 items-center bg-[#1c1f22]">
+      <div aria-hidden className="flex h-7 items-center bg-[#123361]">
         <div className="lane-dash-x h-[3px] w-full [background-size:56px_100%]" />
       </div>
       <div className="container-x grid gap-10 py-14 md:grid-cols-[1.5fr_1fr_1fr]">

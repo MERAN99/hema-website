@@ -82,7 +82,7 @@ export function Hero() {
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.75 }} className="mt-9 flex flex-wrap gap-3">
-          <ButtonLink href="#projects" onClick={go('projects')}>
+          <ButtonLink href="#projects" variant="light" onClick={go('projects')}>
             {t.hero.primary}
             <ArrowRight className="h-4 w-4 rtl:rotate-180" />
           </ButtonLink>

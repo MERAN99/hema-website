@@ -18,7 +18,7 @@ export function Team() {
 
         <Reveal className="mx-auto mt-14 max-w-md">
           <div className="relative flex items-center gap-5 overflow-hidden rounded-3xl bg-navy p-6 text-white shadow-2xl shadow-navy/25">
-            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground">
+            <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-accent text-navy-deep">
               <LeadIcon className="h-7 w-7" />
             </span>
             <div>

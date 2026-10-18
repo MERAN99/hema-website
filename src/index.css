@@ -25,8 +25,9 @@
 
 :root {
   /*
-   * Brand palette taken from the Hema logo: dark navy (#0C133C), royal blue (#2A5CA8) and the
-   * teal of the wordmark (#106888). Accent is a lighter logo blue for highlights on dark backgrounds;
+   * Brand palette taken from the Hema logo: royal blue (#2A5CA8) and the teal of the wordmark (#106888),
+   * with a medium logo blue (#1E4A8C) for dark sections. Accent is a pale logo blue for highlights and
+   * buttons on those blue backgrounds;
    * "brass" (the token name is historical) is the teal used for small labels on light backgrounds.
    */
   --background: 246 248 251;
@@ -34,12 +35,12 @@
   --foreground: 12 19 60;
   --muted: 84 96 118;
   --border: 222 228 236;
-  --navy: 12 19 60;
-  --navy-deep: 7 11 36;
-  --navy-soft: 24 36 84;
+  --navy: 30 74 140;
+  --navy-deep: 23 61 117;
+  --navy-soft: 44 94 166;
   --primary: 42 92 168;
   --primary-foreground: 255 255 255;
-  --accent: 110 160 225;
+  --accent: 169 203 245;
   --brass: 16 104 136;
 
   --font-body: 'Inter', 'Inter Fallback', system-ui, sans-serif;

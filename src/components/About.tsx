@@ -39,7 +39,7 @@ export function About() {
             style={reduce ? undefined : { y: badgeY }}
             className="absolute -top-6 start-4 flex items-center gap-3 rounded-2xl bg-navy px-5 py-4 text-white shadow-xl sm:start-8"
           >
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent text-navy-deep">
               <Building2 className="h-5 w-5" />
             </span>
             <span>
