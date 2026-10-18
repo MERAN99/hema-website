@@ -91,6 +91,28 @@ export const featuredProjects: FeaturedProject[] = [
     partner: { en: 'Raouf Company', ku: 'کۆمپانیای ڕەئوف', ar: 'شركة رؤوف' },
   },
   {
+    id: 'kunamasi-phase2',
+    images: ['kunamasi-phase2-1.jpg', 'kunamasi-phase2-2.jpg', 'kunamasi-phase2-3.jpg', 'kunamasi-phase2-4.jpg', 'kunamasi-phase2-5.jpg', 'kunamasi-phase2-6.jpg'],
+    title: {
+      en: 'Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge Road (Phase Two)',
+      ku: 'ڕێگای کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە (قۆناغی دووەم)',
+      ar: 'طريق كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه (المرحلة الثانية)',
+    },
+    location: { en: 'Sharbazher / Mawat District', ku: 'شار باژێڕ / قەزای ماوەت', ar: 'شارباژير / قضاء ماوت' },
+    summary: {
+      en: 'Construction and asphalting of the Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge road, phase two, in Sharbazher / Mawat District.',
+      ku: 'دروستکردن و قیرتاوکردنی ڕێگای (کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە) قۆناغی دووەم لە شار باژێڕ / قەزای ماوەت.',
+      ar: 'إنشاء وتبليط طريق (كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه)، المرحلة الثانية، في شارباژير / قضاء ماوت.',
+    },
+    highlights: {
+      en: ['This project is phase two of the road', 'Route: Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge', 'Road construction and asphalting'],
+      ku: ['ئەم پڕۆژەیە قۆناغی دووەمی ڕێگاکەیە', 'ڕێڕەو: کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە', 'دروستکردن و قیرتاوکردنی ڕێگا'],
+      ar: ['هذا المشروع هو المرحلة الثانية من الطريق', 'المسار: كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه', 'إنشاء الطريق وتبليطه'],
+    },
+    period: '2025',
+    value: '15,846,160,000',
+  },
+  {
     id: 'sitak',
     images: ['sitak-1.jpg', 'sitak-2.jpg', 'sitak-3.jpg', 'sitak-4.jpg', 'sitak-5.jpg'],
     title: { en: 'Sitak – Gurgadar Road', ku: 'ڕێگای سیتەک – گورگەدەر', ar: 'طريق سيتك – كوركدر' },
@@ -150,6 +172,9 @@ export const featuredProjects: FeaturedProject[] = [
     partner: { en: 'Azad Mohammed Company', ku: 'کۆمپانیای ئازاد محمد', ar: 'شركة آزاد محمد' },
   },
 ];
+
+/** Title of a featured project by id (used by the track record table so reordering projects can't break it). */
+const projectTitle = (id: string) => featuredProjects.find((p) => p.id === id)!.title;
 
 export type SmallProject = { id: string; image: string; title: L10n; location: L10n; period: string };
 
@@ -223,9 +248,9 @@ export const trackRecord: RecordRow[] = [
   },
   { title: { en: 'Two 18-classroom schools in Old Kalar and Rizgari', ku: 'دوو قوتابخانەی 18 پۆلی لە گەڕەکی کەلاری کۆن و ڕزگاری', ar: 'مدرستان بـ18 صفاً في كلار القديمة ورزكاري' }, location: { en: 'Kalar / Sulaymaniyah', ku: 'کەلار / سلێمانی', ar: 'كلار / السليمانية' }, value: 3378359969, currency: 'IQD', period: '2010 – 2011' },
   { title: { en: 'Kalar – Rizgari road, 8.1 km', ku: 'ڕێگای کەلار/ڕزگاری بە درێژایی 8.1 کم', ar: 'طريق كلار/رزكاري بطول 8.1 كم' }, location: { en: 'Kalar / Sulaymaniyah', ku: 'کەلار / سلێمانی', ar: 'كلار / السليمانية' }, value: 11723000000, currency: 'IQD', period: '2013 – 2017' },
-  { title: featuredProjects[1].title, location: sul, value: 5897000, currency: 'USD', period: '2014' },
-  { title: featuredProjects[2].title, location: sul, value: 673000000, currency: 'IQD', period: '2019' },
-  { title: featuredProjects[3].title, location: sul, value: 1000000000, currency: 'IQD', period: '2019' },
+  { title: projectTitle('kunamasi'), location: sul, value: 5897000, currency: 'USD', period: '2014' },
+  { title: projectTitle('sitak'), location: sul, value: 673000000, currency: 'IQD', period: '2019' },
+  { title: projectTitle('tasluja'), location: sul, value: 1000000000, currency: 'IQD', period: '2019' },
   { title: moreProjects[0].title, location: sul, value: 300000000, currency: 'IQD', period: '2019' },
   { title: moreProjects[1].title, location: { en: 'Halabja', ku: 'هەڵەبجە', ar: 'حلبجة' }, value: 1050000000, currency: 'IQD', period: '2019' },
   {
