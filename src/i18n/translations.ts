@@ -45,7 +45,7 @@ const en = {
     p3: 'Our main goal is to protect the name and reputation of the company, to keep growing, and to deliver every project entrusted to us at high quality, while keeping our people safe and protecting the environment.',
     highlights: [
       'Licensed management and highly skilled technical staff in administration, engineering and finance',
-      'Our staff bring between 5 and 20 years of experience',
+      'Our staff bring between 10 and 32 years of experience',
       'Occupational safety courses for every employee',
       'Every employee registered with the Labour Directorate and social insurance',
     ],
@@ -210,7 +210,7 @@ const ku: Dict = {
     p3: 'ئامانجی سەرەکی کۆمپانیاکەمان پاراستنی ناوبانگ و شکۆی کۆمپانیاکە و فراوانکردنی و ئەنجامدانی ئەو پڕۆژانەیە کە پێمان دەسپێردرێت بە کوالیتی بەرز، لەگەڵ سەلامەتی کارمەندەکانمان و پاراستنی ژینگە.',
     highlights: [
       'بەڕێوەبەری ڕێگەپێدراو و ستافی تەکنیکی لێهاتوو لە بوارەکانی کارگێڕی، ئەندازیاری و دارایی',
-      'ئەزموونی ستافەکەمان لە نێوان 5 بۆ 20 ساڵدایە',
+      'ئەزموونی ستافەکەمان لە نێوان 10 بۆ 32 ساڵدایە',
       'خولی سەلامەتی پیشەیی بۆ هەموو کارمەندان',
       'تۆمارکردنی کارمەندان لە بەڕێوەبەرایەتی کار و بیمەی کۆمەڵایەتی',
     ],
@@ -373,7 +373,7 @@ const ar: Dict = {
     p3: 'هدفنا الرئيسي هو الحفاظ على سمعة الشركة ومكانتها وتوسيع أعمالها، وتنفيذ المشاريع الموكلة إلينا بجودة عالية، مع الحفاظ على سلامة موظفينا وحماية البيئة.',
     highlights: [
       'إدارة مرخّصة وكادر فني عالي الكفاءة في المجالات الإدارية والهندسية والمالية',
-      'تتراوح خبرة كادرنا بين 5 و20 عاماً',
+      'تتراوح خبرة كادرنا بين 10 و32 عاماً',
       'دورات في السلامة المهنية لجميع الموظفين',
       'تسجيل جميع الموظفين في مديرية العمل والضمان الاجتماعي',
     ],
