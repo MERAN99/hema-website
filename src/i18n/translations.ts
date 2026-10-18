@@ -39,7 +39,7 @@ const en = {
   ],
   about: {
     eyebrow: 'About us',
-    title: 'Two decades of engineering experience, built project by project.',
+    title: 'Three decades of engineering experience, built project by project.',
     p1: 'Our company takes pride in its expertise across every field of engineering. It is the result of experience accumulated through the many projects we have delivered in every specialty.',
     p2: "We work in trading and general contracting: buildings, roads, water and sewer networks, bridges, surveying and planning. We are proud to take part in rebuilding and developing Iraq's infrastructure, and owning a large fleet of machines from leading brands is one of the reasons for our success.",
     p3: 'Our main goal is to protect the name and reputation of the company, to keep growing, and to deliver every project entrusted to us at high quality, while keeping our people safe and protecting the environment.',
@@ -204,7 +204,7 @@ const ku: Dict = {
   ],
   about: {
     eyebrow: 'دەربارەی ئێمە',
-    title: 'دوو دەیە ئەزموونی ئەندازیاری، پڕۆژە لە دوای پڕۆژە.',
+    title: 'سێ دەیە ئەزموونی ئەندازیاری، پڕۆژە لە دوای پڕۆژە.',
     p1: 'کۆمپانیاکەمان شانازی بە شارەزایی خۆیەوە دەکات لە هەموو بوارەکانی پسپۆڕی ئەندازیاریدا، کە ئەمەش دەرئەنجامی ئەزموونی کەڵەکەبووە لە ڕێگەی جێبەجێکردنی چەندین پڕۆژە لە هەموو پسپۆڕییەکان.',
     p2: 'کۆمپانیاکەمان لە بوارەکانی بازرگانی و بەڵێندەرایەتی گشتی (بیناسازی، ڕێگاوبان، تۆڕی ئاو و ئاوەڕۆ، پرد، کارەکانی ڕووپێوی و پلاندانان) کار دەکات و شانازی دەکات بە بەشداریکردن لە بنیاتنانەوە و ئاوەدانکردنەوەی ژێرخانی عێراق. خاوەندارێتی چەندین ئامێری براندە بەناوبانگەکان یەکێکە لە هۆکارەکانی سەرکەوتنمان.',
     p3: 'ئامانجی سەرەکی کۆمپانیاکەمان پاراستنی ناوبانگ و شکۆی کۆمپانیاکە و فراوانکردنی و ئەنجامدانی ئەو پڕۆژانەیە کە پێمان دەسپێردرێت بە کوالیتی بەرز، لەگەڵ سەلامەتی کارمەندەکانمان و پاراستنی ژینگە.',
@@ -367,7 +367,7 @@ const ar: Dict = {
   ],
   about: {
     eyebrow: 'من نحن',
-    title: 'عقدان من الخبرة الهندسية، مشروعاً بعد مشروع.',
+    title: 'ثلاثة عقود من الخبرة الهندسية، مشروعاً بعد مشروع.',
     p1: 'تفخر شركتنا بخبرتها في جميع مجالات الاختصاص الهندسي، وهي ثمرة خبرة متراكمة اكتسبناها من خلال تنفيذ العديد من المشاريع في مختلف الاختصاصات.',
     p2: 'تعمل شركتنا في مجالات التجارة والمقاولات العامة (الأبنية، الطرق، شبكات المياه والمجاري، الجسور، أعمال المساحة والتخطيط)، وتفخر بالمساهمة في إعادة بناء وإعمار البنى التحتية في العراق. وتُعدّ ملكيتنا لعدد كبير من الآليات من أشهر العلامات التجارية أحد أسباب نجاحنا.',
     p3: 'هدفنا الرئيسي هو الحفاظ على سمعة الشركة ومكانتها وتوسيع أعمالها، وتنفيذ المشاريع الموكلة إلينا بجودة عالية، مع الحفاظ على سلامة موظفينا وحماية البيئة.',
