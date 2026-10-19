@@ -13,7 +13,7 @@ export function TrackRecord() {
     <section className="py-24 md:py-32" aria-labelledby="record-title">
       <div className="container-x">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
-          <SectionHeading eyebrow={t.record.eyebrow} title={t.record.title} />
+          <SectionHeading eyebrow={t.record.eyebrow} title={t.record.title.replace('{year}', String(new Date().getFullYear()))} />
           <Reveal className="rounded-3xl bg-navy p-6 text-white lg:max-w-sm">
             <p className="text-sm text-white/60">{t.record.total}</p>
             <p className="mt-1 font-display text-2xl font-bold text-accent md:text-3xl">{money(total, 'IQD')}</p>

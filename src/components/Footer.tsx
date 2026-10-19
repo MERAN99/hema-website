@@ -45,7 +45,6 @@ export function Footer() {
           <a href={`mailto:${contact.email}`} className="block break-all hover:text-accent">
             {contact.email}
           </a>
-          <p className="text-sm text-white/50">{t.contact.addressValue}</p>
         </div>
       </div>
       <div className="border-t border-white/10">

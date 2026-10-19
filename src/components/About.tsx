@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { Award, Building2, CheckCircle2, Landmark, MapPin } from 'lucide-react';
+import { Award, Building2, CheckCircle2, Landmark } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { imgSet, parallaxSet } from '../data/company';
 import { ParallaxImage } from './ui/ParallaxImage';
@@ -19,7 +19,6 @@ export function About() {
   const facts = [
     { icon: Award, label: t.about.gradeLabel, value: t.about.grade },
     { icon: Landmark, label: t.about.capitalLabel, value: t.about.capital },
-    { icon: MapPin, label: t.about.badgeTitle, value: t.about.badge },
   ];
 
   return (
@@ -70,7 +69,7 @@ export function About() {
       </div>
 
       <div className="container-x mt-24">
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           {facts.map((f, i) => (
             <Reveal key={f.label} delay={i * 0.08} className="flex items-center gap-4 rounded-2xl bg-navy p-6 text-white">
               <f.icon className="h-7 w-7 shrink-0 text-accent" />

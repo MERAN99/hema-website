@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExternalLink, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { Mail, Phone, Send } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { contact, parallaxSet } from '../data/company';
 import { cn } from '../lib';
@@ -62,9 +62,8 @@ export function Contact() {
   };
 
   const cards = [
-    { icon: Phone, wide: true, label: t.contact.phone, content: contact.phones.map((p) => <a key={p} href={`tel:${p}`} className="block hover:text-accent"><span dir="ltr">{p.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3')}</span></a>) },
-    { icon: Mail, wide: true, label: t.contact.email, content: <a href={`mailto:${contact.email}`} className="break-all hover:text-accent">{contact.email}</a> },
-    { icon: MapPin, wide: true, label: t.contact.address, content: (<><span className="block">{t.contact.addressValue}</span><a href={contact.mapUrl} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:underline">{t.contact.map}<ExternalLink className="h-3.5 w-3.5" /></a></>) },
+    { icon: Phone, label: t.contact.phone, content: contact.phones.map((p) => <a key={p} href={`tel:${p}`} className="block hover:text-accent"><span dir="ltr">{p.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3')}</span></a>) },
+    { icon: Mail, label: t.contact.email, content: <a href={`mailto:${contact.email}`} className="break-all hover:text-accent">{contact.email}</a> },
   ];
 
   return (
@@ -72,9 +71,9 @@ export function Contact() {
       <div className="container-x grid gap-14 lg:grid-cols-2">
         <div>
           <SectionHeading tone="dark" eyebrow={t.contact.eyebrow} title={t.contact.title} subtitle={t.contact.subtitle} />
-          <div className="mt-10 grid gap-3 sm:grid-cols-2">
+          <div className="mt-10 grid gap-3">
             {cards.map((c, i) => (
-              <Reveal key={c.label} delay={i * 0.06} className={cn('rounded-2xl border border-white/10 bg-white/[0.04] p-5', 'wide' in c && c.wide && 'sm:col-span-2')}>
+              <Reveal key={c.label} delay={i * 0.06} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
                 <c.icon className="h-5 w-5 text-accent" />
                 <p className="mt-3 text-sm text-white/55">{c.label}</p>
                 <div className="mt-1 font-medium leading-relaxed">{c.content}</div>

@@ -30,7 +30,6 @@ export function imgSet(name: string, sizes: string) {
 export const contact = {
   phones: ['07701557702', '07701222351'],
   email: 'hemacompany12@gmail.com',
-  mapUrl: 'https://www.google.com/maps/search/?api=1&query=Dargazen%2C+Sulaymaniyah%2C+Iraq',
 };
 
 export type FeaturedProject = {
@@ -91,28 +90,6 @@ export const featuredProjects: FeaturedProject[] = [
     partner: { en: 'Raouf Company', ku: 'کۆمپانیای ڕەئوف', ar: 'شركة رؤوف' },
   },
   {
-    id: 'kunamasi-phase2',
-    images: ['kunamasi-phase2-1.jpg', 'kunamasi-phase2-2.jpg', 'kunamasi-phase2-3.jpg', 'kunamasi-phase2-4.jpg', 'kunamasi-phase2-5.jpg', 'kunamasi-phase2-6.jpg'],
-    title: {
-      en: 'Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge Road (Phase Two)',
-      ku: 'ڕێگای کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە (قۆناغی دووەم)',
-      ar: 'طريق كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه (المرحلة الثانية)',
-    },
-    location: { en: 'Sharbazher / Mawat District', ku: 'شار باژێڕ / قەزای ماوەت', ar: 'شارباژير / قضاء ماوت' },
-    summary: {
-      en: 'Construction and asphalting of the Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge road, phase two, in Sharbazher / Mawat District.',
-      ku: 'دروستکردن و قیرتاوکردنی ڕێگای (کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە) قۆناغی دووەم لە شار باژێڕ / قەزای ماوەت.',
-      ar: 'إنشاء وتبليط طريق (كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه)، المرحلة الثانية، في شارباژير / قضاء ماوت.',
-    },
-    highlights: {
-      en: ['This project is phase two of the road', 'Route: Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge', 'Road construction and asphalting'],
-      ku: ['ئەم پڕۆژەیە قۆناغی دووەمی ڕێگاکەیە', 'ڕێڕەو: کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە', 'دروستکردن و قیرتاوکردنی ڕێگا'],
-      ar: ['هذا المشروع هو المرحلة الثانية من الطريق', 'المسار: كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه', 'إنشاء الطريق وتبليطه'],
-    },
-    period: '2025',
-    value: '15,846,160,000',
-  },
-  {
     id: 'sitak',
     images: ['sitak-1.jpg', 'sitak-2.jpg', 'sitak-3.jpg', 'sitak-4.jpg', 'sitak-5.jpg'],
     title: { en: 'Sitak – Gurgadar Road', ku: 'ڕێگای سیتەک – گورگەدەر', ar: 'طريق سيتك – كوركدر' },
@@ -170,6 +147,28 @@ export const featuredProjects: FeaturedProject[] = [
     period: '2021',
     value: '16,989,600,000',
     partner: { en: 'Azad Mohammed Company', ku: 'کۆمپانیای ئازاد محمد', ar: 'شركة آزاد محمد' },
+  },
+  {
+    id: 'kunamasi-phase2',
+    images: ['kunamasi-phase2-1.jpg', 'kunamasi-phase2-2.jpg', 'kunamasi-phase2-3.jpg', 'kunamasi-phase2-4.jpg', 'kunamasi-phase2-5.jpg', 'kunamasi-phase2-6.jpg'],
+    title: {
+      en: 'Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge Road (Phase Two)',
+      ku: 'ڕێگای کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە (قۆناغی دووەم)',
+      ar: 'طريق كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه (المرحلة الثانية)',
+    },
+    location: { en: 'Sharbazher / Mawat District', ku: 'شار باژێڕ / قەزای ماوەت', ar: 'شارباژير / قضاء ماوت' },
+    summary: {
+      en: 'Construction and asphalting of the Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge road, phase two, in Sharbazher / Mawat District.',
+      ku: 'دروستکردن و قیرتاوکردنی ڕێگای (کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە) قۆناغی دووەم لە شار باژێڕ / قەزای ماوەت.',
+      ar: 'إنشاء وتبليط طريق (كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه)، المرحلة الثانية، في شارباژير / قضاء ماوت.',
+    },
+    highlights: {
+      en: ['This project is phase two of the road', 'Route: Kunamasi – Dolbeshk – Qamish – Safra – Waisa Bridge', 'Road construction and asphalting'],
+      ku: ['ئەم پڕۆژەیە قۆناغی دووەمی ڕێگاکەیە', 'ڕێڕەو: کونەماسی - دۆڵبێشک - قامیش - سەفرە - پردی وەیسە', 'دروستکردن و قیرتاوکردنی ڕێگا'],
+      ar: ['هذا المشروع هو المرحلة الثانية من الطريق', 'المسار: كونه ماسي – دولبيشك – قاميش – سفره – جسر ويسه', 'إنشاء الطريق وتبليطه'],
+    },
+    period: '2025',
+    value: '15,846,160,000',
   },
 ];
 
