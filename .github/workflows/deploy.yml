@@ -1,9 +1,6 @@
-# Builds the site and uploads it to the hemacompany.com server on every push to main.
-# Credentials live in GitHub: Settings > Secrets and variables > Actions:
-#   FTP_SERVER      hemacompany.com
-#   FTP_USERNAME    the Webuzo FTP / account user (e.g. hema)
-#   FTP_PASSWORD    that user's FTP password
-#   FTP_SERVER_DIR  folder relative to the FTP login root, usually public_html/ (must end with /)
+# Builds the site and uploads it to the hemacompany.com server over SSH on every push to main.
+# One secret is needed (Settings > Secrets and variables > Actions):
+#   DEPLOY_SSH_KEY  private key whose public half is in /home/hema/.ssh/authorized_keys on the server
 name: Deploy to hemacompany.com
 
 on:
@@ -15,6 +12,12 @@ on:
 concurrency:
   group: deploy-hemacompany
   cancel-in-progress: false
+
+env:
+  SERVER: 159.198.47.60
+  SSH_USER: hema
+  # The server's own SSH host key, pinned so the upload can't be redirected to another machine.
+  HOST_KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICjSOmvhCz/7vuKBHx4AKJx2SjzUM8mxF1S8NbcDAxLi"
 
 jobs:
   deploy:
@@ -33,21 +36,31 @@ jobs:
       - name: Check the build includes .htaccess
         run: test -f dist/.htaccess
 
+      - name: Set up SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "$SERVER $HOST_KEY" > ~/.ssh/known_hosts
+
       - name: Upload to server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          # Encrypted FTP. The server's FTP certificate is self-signed, so "loose" keeps the encryption
-          # but skips certificate verification. Switch to `protocol: ftp` only if the server drops TLS.
-          protocol: ftps
-          security: loose
-          local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          # Keep the server's own files (SSL renewal challenges, cgi-bin) untouched.
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .well-known/**
-            cgi-bin/**
+        run: |
+          SSH="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+          tar -C dist -czf site.tgz .
+          scp -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes site.tgz "$SSH_USER@$SERVER:site.tgz"
+          # Unpack next to the site, then swap each top-level item in. Files not in the build
+          # (e.g. .well-known used for SSL renewals) are left untouched.
+          $SSH "$SSH_USER@$SERVER" 'set -e
+            rm -rf ~/site-new && mkdir ~/site-new
+            tar -xzf ~/site.tgz -C ~/site-new
+            cd ~/public_html
+            for f in $(ls -A ~/site-new); do
+              rm -rf "$f.old"
+              if [ -e "$f" ]; then mv "$f" "$f.old"; fi
+              mv ~/site-new/"$f" "$f"
+              rm -rf "$f.old"
+            done
+            rm -rf ~/site-new ~/site.tgz
+            echo "Deployed: $(ls ~/public_html/assets | tr "\n" " ")"'
