@@ -1,0 +1,53 @@
+# Builds the site and uploads it to the hemacompany.com server on every push to main.
+# Credentials live in GitHub: Settings > Secrets and variables > Actions:
+#   FTP_SERVER      hemacompany.com
+#   FTP_USERNAME    the Webuzo FTP / account user (e.g. hema)
+#   FTP_PASSWORD    that user's FTP password
+#   FTP_SERVER_DIR  folder relative to the FTP login root, usually public_html/ (must end with /)
+name: Deploy to hemacompany.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two uploads at the same time; a newer push waits for the running one.
+concurrency:
+  group: deploy-hemacompany
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Check the build includes .htaccess
+        run: test -f dist/.htaccess
+
+      - name: Upload to server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Encrypted FTP. The server's FTP certificate is self-signed, so "loose" keeps the encryption
+          # but skips certificate verification. Switch to `protocol: ftp` only if the server drops TLS.
+          protocol: ftps
+          security: loose
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          # Keep the server's own files (SSL renewal challenges, cgi-bin) untouched.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .well-known/**
+            cgi-bin/**
