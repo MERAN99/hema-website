@@ -6,3 +6,9 @@ dist/
 images-backup/
 .env
 .env.*
+# Never commit keys or deploy leftovers
+*.pem
+*.key
+id_*
+*_deploy
+.ftp-deploy-sync-state.json

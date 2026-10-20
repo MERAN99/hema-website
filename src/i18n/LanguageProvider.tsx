@@ -12,12 +12,16 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 const STORAGE_KEY = 'hema-lang';
 
+// Only exact language codes count: `in` would also accept inherited names like "toString",
+// so ?lang=toString would load a function as the dictionary and crash the page.
+const isLang = (value: string | null): value is Lang => value !== null && Object.prototype.hasOwnProperty.call(dictionaries, value);
+
 function readInitialLang(): Lang {
   try {
     const fromUrl = new URLSearchParams(window.location.search).get('lang');
-    if (fromUrl && fromUrl in dictionaries) return fromUrl as Lang;
+    if (isLang(fromUrl)) return fromUrl;
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored && stored in dictionaries) return stored as Lang;
+    if (isLang(stored)) return stored;
   } catch {
     // Storage can be blocked (private mode); fall back to the browser language.
   }
