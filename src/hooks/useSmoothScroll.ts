@@ -30,6 +30,12 @@ export function scrollToId(id: string) {
   else el.scrollIntoView({ behavior: 'smooth' });
 }
 
+/** Smoothly scroll to an absolute page position (used by the film's chapter rail). */
+export function scrollToY(y: number) {
+  if (lenis) lenis.scrollTo(y);
+  else window.scrollTo({ top: y, behavior: 'smooth' });
+}
+
 /** Freeze page scrolling (e.g. while the mobile menu is open). */
 export function setScrollLocked(locked: boolean) {
   document.documentElement.style.overflow = locked ? 'hidden' : '';

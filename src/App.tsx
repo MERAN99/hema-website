@@ -1,7 +1,7 @@
 import { useLanguage } from './i18n/LanguageProvider';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
+import { ScrollFilm } from './components/ScrollFilm';
 import { About } from './components/About';
 import { Values } from './components/Values';
 import { Services } from './components/Services';
@@ -24,7 +24,7 @@ export default function App() {
     <div key={lang}>
       <Navbar />
       <main>
-        <Hero />
+        <ScrollFilm />
         <About />
         <Values />
         <Services />

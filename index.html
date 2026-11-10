@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1e4a8c" />
+    <meta name="theme-color" content="#0f1828" />
     <meta name="description" content="Hema Company for General Contracting Ltd. builds roads, buildings, water networks and bridges across the Kurdistan Region and Iraq since 2004." />
     <link rel="canonical" href="https://hemacompany.com/" />
     <link rel="icon" type="image/png" href="./images/logo-mark.png" />
@@ -13,16 +13,10 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700&display=swap" /></noscript>
-    <!-- The hero photo is the largest thing on screen: start downloading the right size immediately. -->
-    <link
-      rel="preload"
-      as="image"
-      type="image/webp"
-      href="./images/hero-road-1600.webp"
-      imagesrcset="./images/hero-road-480.webp 480w, ./images/hero-road-960.webp 960w, ./images/hero-road-1600.webp 1600w, ./images/hero-road.webp 2400w"
-      imagesizes="(max-aspect-ratio: 3/2) 60vh, 100vw"
-      fetchpriority="high"
-    />
+    <!-- The scroll film opens the page: start loading its poster and first frame immediately (phones get the small set). -->
+    <link rel="preload" as="image" href="./film/poster.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="./film/desktop/f_0001.webp" media="(min-width: 768px)" />
+    <link rel="preload" as="image" type="image/webp" href="./film/mobile/f_0001.webp" media="(max-width: 767px)" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Hema Company" />
     <meta property="og:title" content="Hema Company | General Contracting, Roads &amp; Infrastructure" />

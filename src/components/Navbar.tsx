@@ -94,7 +94,12 @@ export function Navbar() {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    // Transparent over the scroll film (#top); solid once the page has scrolled past it.
+    const onScroll = () => {
+      const film = document.getElementById('top');
+      const filmEnd = film ? film.offsetTop + film.offsetHeight - window.innerHeight : 40;
+      setScrolled(window.scrollY > filmEnd - 1);
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -147,7 +152,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             <LanguageMenu solid={scrolled} onOpen={() => setOpen(false)} />
-            <a href="#contact" onClick={go('contact')} className="hidden min-h-11 items-center rounded-full bg-accent px-5 text-sm font-semibold text-navy-deep transition hover:bg-white md:inline-flex">
+            <a href="#contact" onClick={go('contact')} className="hidden min-h-11 items-center rounded-full bg-accent px-5 text-sm font-semibold text-navy-deep transition hover:bg-[#f2b23c] md:inline-flex">
               {t.nav.cta}
             </a>
             <button
@@ -201,7 +206,7 @@ export function Navbar() {
                 </motion.li>
               ))}
             </ul>
-            <a href="#contact" onClick={go('contact')} className="mt-6 flex min-h-12 items-center justify-center rounded-full bg-accent font-semibold text-navy-deep transition hover:bg-white">
+            <a href="#contact" onClick={go('contact')} className="mt-6 flex min-h-12 items-center justify-center rounded-full bg-accent font-semibold text-navy-deep transition hover:bg-[#f2b23c]">
               {t.nav.cta}
             </a>
           </motion.nav>

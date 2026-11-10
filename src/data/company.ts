@@ -300,3 +300,17 @@ export function parallaxSet(name: string, sizes: string) {
   const { src, ...imgProps } = imgSet(name, sizes);
   return { src, imgProps };
 }
+
+/** Scroll film (public/film): 307 frames at 6 per second of a 51.2 s cut; chapters are fractions of the film. */
+export const FILM_FRAMES = 307;
+export const FILM_HOLD = 0.94; // last 6% of the section holds the final frame
+export const filmChapters: { from: number; to: number }[] = [
+  { from: 0.0, to: 0.143 },
+  { from: 0.143, to: 0.252 },
+  { from: 0.252, to: 0.36 },
+  { from: 0.36, to: 0.468 },
+  { from: 0.468, to: 0.557 },
+  { from: 0.557, to: 0.665 },
+  { from: 0.665, to: 0.882 },
+  { from: 0.882, to: 1.0 },
+];

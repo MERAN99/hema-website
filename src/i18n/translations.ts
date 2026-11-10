@@ -31,6 +31,20 @@ const en = {
     secondary: 'Contact us',
     scroll: 'Scroll',
   },
+  film: {
+    rail: 'Chapters',
+    // Index 0 is the opening (it uses `hero`); chapters 1–7 follow the film.
+    chapters: [
+      { kicker: '', title: '', body: '' },
+      { kicker: '01 · Survey & design', title: 'Every road starts on paper.', body: 'Surveying, mapping and a design built on the loads and traffic the road will carry.' },
+      { kicker: '02 · Route & clearing', title: 'We open the way.', body: 'Setting out the alignment, clearing the land, cutting through rock, testing the soil and widening the route.' },
+      { kicker: '03 · Embankment', title: 'Built up, layer by layer.', body: 'Suitable fill spread in layers, compacted by rollers and tested for strength after every layer.' },
+      { kicker: '04 · Retaining walls', title: 'Holding the mountain back.', body: 'Reinforced concrete walls wherever a slope could fail.' },
+      { kicker: '05 · Base courses', title: 'The foundation you never see.', body: 'Sub-base, base and crushed stone: graded, brought to the right moisture, compacted and tested.' },
+      { kicker: '06 · Asphalt · 140–160 °C', title: 'Three layers of hot asphalt.', body: 'Prime coat on the base, tack coat between layers. Base course 7–10 cm · Binder 5–7 cm · Wearing course 4–5 cm.' },
+      { kicker: '07 · Finished road', title: 'Ready for the people who use it.', body: 'Lane markings, road signs, lighting and shoulders. Then the road opens.' },
+    ],
+  },
   stats: [
     { value: 2004, suffix: '', label: 'Founded in Sulaymaniyah' },
     { value: 13, suffix: '+', label: 'Major projects delivered' },
@@ -191,6 +205,19 @@ const ku: Dict = {
     secondary: 'پەیوەندیمان پێوە بکە',
     scroll: 'بڕۆ خوارەوە',
   },
+  film: {
+    rail: 'بەشەکان',
+    chapters: [
+      { kicker: '', title: '', body: '' },
+      { kicker: '01 · نەخشە و دیزاین', title: 'هەموو ڕێگایەک لەسەر کاغەز دەست پێدەکات.', body: 'ڕووپێوی، نەخشەکێشان و دیزاینێکی شایستە بەپێی ئەو بار و بەکارهێنانەی بۆ ڕێگاکە پێشبینی دەکرێت.' },
+      { kicker: '02 · ئاراستە و پاککردنەوە', title: 'ڕێگا دەکەینەوە.', body: 'دیاریکردنی ئاراستەی شەقام، پاککردنەوە و بڕینی شاخ، پشکنینی خاک و فراوانکردنی ڕێگا.' },
+      { kicker: '03 · پڕکردنەوەی نزمایی', title: 'چین بە چین بەرز دەبێتەوە.', body: 'خاکی گونجاو چین بە چین ڕادەخرێت، بە ڕۆڵە دەپەستێورێت و هێز و بەرگەگرییەکەی پشکنینی بۆ دەکرێت.' },
+      { kicker: '04 · دیواری ڕاگر', title: 'شاخ ڕادەگرین.', body: 'دیواری کۆنکرێتی لەو شوێنانەی مەترسی داڕمانیان لەسەرە.' },
+      { kicker: '05 · بەیس و سەب بەیس', title: 'بناغەیەک کە نابینرێت.', body: 'چینەکانی سەب بەیس، بەیس و کراش ستۆن، بە شێی پێویست، پەستاندن بە ڕۆڵە و پشکنینی هێز.' },
+      { kicker: '06 · قیرتاوکردن · 140–160 پلە', title: 'سێ چین ئەسفەڵتی گەرم.', body: 'پرایم کۆت لەسەر بەیس و تاک کۆت لە نێوان چینەکاندا. چینی بنەڕەتی 7–10 سم · چینی بەستنەوە 5–7 سم · چینی ڕووکار 4–5 سم.' },
+      { kicker: '07 · ڕێگای تەواوکراو', title: 'ئامادە بۆ خەڵک.', body: 'هێڵکاری، نیشانەکانی ڕێگا، ڕووناکی و شانەی ڕێگا. پاشان ڕێگاکە دەکرێتەوە.' },
+    ],
+  },
   stats: [
     { value: 2004, suffix: '', label: 'دامەزراندن لە سلێمانی' },
     { value: 13, suffix: '+', label: 'پڕۆژەی گەورەی جێبەجێکراو' },
@@ -348,6 +375,19 @@ const ar: Dict = {
     primary: 'استعرض مشاريعنا',
     secondary: 'اتصل بنا',
     scroll: 'مرّر للأسفل',
+  },
+  film: {
+    rail: 'الفصول',
+    chapters: [
+      { kicker: '', title: '', body: '' },
+      { kicker: '01 · المسح والتصميم', title: 'كل طريق يبدأ على الورق.', body: 'مسح ورسم خرائط وتصميم يناسب الأحمال وحركة المرور المتوقعة للطريق.' },
+      { kicker: '02 · المسار والتنظيف', title: 'نفتح الطريق.', body: 'تحديد المسار وتنظيف الأرض وقطع الصخور وفحص التربة وتوسيع الطريق.' },
+      { kicker: '03 · أعمال الردم', title: 'طبقة فوق طبقة.', body: 'تُفرش التربة المناسبة على طبقات وتُدمك بالحادلات وتُفحص قوتها بعد كل طبقة.' },
+      { kicker: '04 · الجدران الساندة', title: 'نسند الجبل.', body: 'جدران خرسانية مسلحة حيث يوجد خطر الانهيار.' },
+      { kicker: '05 · طبقات الأساس', title: 'أساس لا تراه.', body: 'طبقات ما تحت الأساس والأساس والحصى المكسر، بالرطوبة الصحيحة، مدموكة ومفحوصة.' },
+      { kicker: '06 · الإسفلت · 140–160 درجة', title: 'ثلاث طبقات من الإسفلت الساخن.', body: 'برايم كوت على الأساس وتاك كوت بين الطبقات. الطبقة الأساسية 7–10 سم · الرابطة 5–7 سم · السطحية 4–5 سم.' },
+      { kicker: '07 · طريق مكتمل', title: 'جاهز لمن يستخدمه.', body: 'التخطيط والإشارات والإنارة والأكتاف، ثم يُفتتح الطريق.' },
+    ],
   },
   stats: [
     { value: 2004, suffix: '', label: 'التأسيس في السليمانية' },
