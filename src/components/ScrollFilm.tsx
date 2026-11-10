@@ -42,23 +42,70 @@ function useFilmEngine() {
     let dirty = true;
     let alive = true;
 
-    const load = (i: number) => {
-      if (frames[i]) return;
+    // Frames download a few at a time so they never crowd out the page's own code, fonts and poster
+    // (the server speaks HTTP/1.1: only ~6 connections). Frame 1 comes first (it's preloaded in index.html);
+    // the rest start once the page has loaded, nearest to the playhead first, then coarse to fine.
+    // On slow or data-saving connections only every 4th frame is fetched outside the visible stretch.
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const slow = !!conn && (!!conn.saveData || /(^|-)(2g|3g)$/.test(conn.effectiveType ?? ''));
+    const MAX_ACTIVE = slow ? 2 : 6;
+    // Look far enough ahead to cover the whole opening chapter, so the first thing visitors scroll is complete.
+    const LOOK_AHEAD = Math.ceil(filmChapters[1].from * FILM_HOLD * (N - 1)) + 4;
+    const requested = new Uint8Array(N);
+    let active = 0;
+    let streaming = false;
+
+    const request = (i: number) => {
+      requested[i] = 1;
+      active++;
       const im = new Image();
       im.decoding = 'async';
-      im.src = `./film/${set}/f_${pad(i + 1)}.webp`;
+      im.setAttribute('fetchpriority', i === 0 ? 'high' : 'low');
+      const finish = () => {
+        active--;
+        pump();
+      };
       im.onload = () => {
         if (!alive) return;
         ready[i] = 1;
         dirty = true;
+        finish();
       };
+      im.onerror = finish;
+      im.src = `./film/${set}/f_${pad(i + 1)}.webp`;
       frames[i] = im;
     };
-    // The opening chapter (what visitors see first) loads in full first, so it plays smoothly right away;
-    // the rest follows coarse to fine: every 16th frame, then every 4th, then all.
-    const openingEnd = Math.ceil(filmChapters[1].from * FILM_HOLD * (N - 1)) + 2;
-    for (let i = 0; i < Math.min(N, openingEnd); i++) load(i);
-    for (const step of [16, 4, 1]) for (let i = 0; i < N; i += step) load(i);
+
+    const nextFrame = () => {
+      const here = Math.round(Math.min(1, target / FILM_HOLD) * (N - 1));
+      // What the visitor is about to see: a stretch ahead of the playhead, and a little behind it.
+      for (let d = 0; d < LOOK_AHEAD; d++) {
+        const ahead = here + d;
+        if (ahead < N && !requested[ahead]) return ahead;
+        const behind = here - d;
+        if (d < 6 && behind >= 0 && !requested[behind]) return behind;
+      }
+      for (const step of slow ? [16, 4] : [16, 4, 1]) for (let i = 0; i < N; i += step) if (!requested[i]) return i;
+      return -1;
+    };
+
+    function pump() {
+      if (!alive || !streaming) return;
+      while (active < MAX_ACTIVE) {
+        const i = nextFrame();
+        if (i < 0) return;
+        request(i);
+      }
+    }
+
+    request(0);
+    const startStreaming = () => {
+      streaming = true;
+      pump();
+    };
+    const afterLoad = () => window.setTimeout(startStreaming, 150);
+    if (document.readyState === 'complete') afterLoad();
+    else window.addEventListener('load', afterLoad, { once: true });
 
     const nearest = (i: number) => {
       for (let d = 0; d < N; d++) {
@@ -95,6 +142,7 @@ function useFilmEngine() {
     const readScroll = () => {
       const max = track.offsetHeight - window.innerHeight;
       target = max > 0 ? clamp01(-track.getBoundingClientRect().top / max) : 0;
+      pump();
     };
 
     const styleCaption = (el: HTMLElement | null, fadeIn: number, fadeOut: number) => {
@@ -171,6 +219,7 @@ function useFilmEngine() {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', readScroll);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('load', afterLoad);
     };
   }, []);
 
@@ -318,6 +367,7 @@ export function ScrollFilm() {
   const reduce = useReducedMotion();
   const { trackRef, canvasRef, captionRefs, statsRef, barRef, hintRef, active, started, goToChapter } = useFilmEngine();
   const sound = useFilmSound(trackRef);
+  const posterSet = typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop';
 
   const go = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -343,8 +393,8 @@ export function ScrollFilm() {
     <section id="top" ref={trackRef} aria-label={t.hero.eyebrow} className="relative h-[650vh] bg-navy-deep md:h-[800vh]">
       <div
         className="sticky top-0 h-[100svh] overflow-hidden bg-cover bg-center"
-        // The poster shows instantly; once the first frame is on the canvas it is no longer needed.
-        style={started ? undefined : { backgroundImage: "url('./film/poster.jpg')" }}
+        // Frame 1 (preloaded in index.html) shows as a background instantly, until the canvas has drawn it.
+        style={started ? undefined : { backgroundImage: `url('./film/${posterSet}/f_0001.webp')` }}
       >
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
 

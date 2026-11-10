@@ -9,7 +9,7 @@ ServerSignature Off
   RewriteEngine On
   RewriteRule (^|/)\.(?!well-known/) - [F,L]
 </IfModule>
-<FilesMatch "(^\.|\.(bak|old|orig|swp|tgz|tar|gz|zip|sql|log|sh|json)$)">
+<FilesMatch "(^\.|\.(bak|old|orig|swp|tgz|tar|zip|sql|log|sh|json)$)">
   Require all denied
 </FilesMatch>
 
@@ -18,6 +18,15 @@ ServerSignature Off
   RewriteCond %{HTTPS} off [OR]
   RewriteCond %{HTTP_HOST} ^www\. [NC]
   RewriteRule ^ https://hemacompany.com%{REQUEST_URI} [L,R=301]
+
+  # Serve the pre-compressed copies made at build time (scripts/compress.mjs) when the browser accepts them:
+  # the server has no on-the-fly compression, and this cuts the page's code from ~444 KB to ~118 KB.
+  RewriteCond %{HTTP:Accept-Encoding} br
+  RewriteCond %{REQUEST_FILENAME}.br -f
+  RewriteRule ^(.+\.(?:js|css|svg))$ $1.br [L,E=no-gzip:1]
+  RewriteCond %{HTTP:Accept-Encoding} gzip
+  RewriteCond %{REQUEST_FILENAME}.gz -f
+  RewriteRule ^(.+\.(?:js|css|svg))$ $1.gz [L,E=no-gzip:1]
 
   # Single-page site: unknown paths fall back to index.html.
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -42,8 +51,9 @@ ServerSignature Off
   Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; script-src-attr 'unsafe-hashes' 'sha256-MhtPZXr7+LpJUY5qtMutB+qWfQtMaPccfe7QXtCcEYc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
 
   # Hashed JS/CSS bundles never change: cache for a year.
-  <FilesMatch "\.(js|css)$">
+  <FilesMatch "\.(js|css)(\.(br|gz))?$">
     Header set Cache-Control "public, max-age=31536000, immutable"
+    Header append Vary Accept-Encoding
   </FilesMatch>
   # Photos keep their names when replaced: cache for a week.
   <FilesMatch "\.(webp|jpg|jpeg|png|ico)$">
@@ -57,4 +67,16 @@ ServerSignature Off
 
 <IfModule mod_mime.c>
   AddType image/webp .webp
+  AddEncoding br .br
+  AddEncoding gzip .gz
 </IfModule>
+# Pre-compressed files keep the type of the original file.
+<FilesMatch "\.js\.(br|gz)$">
+  ForceType "text/javascript; charset=utf-8"
+</FilesMatch>
+<FilesMatch "\.css\.(br|gz)$">
+  ForceType "text/css; charset=utf-8"
+</FilesMatch>
+<FilesMatch "\.svg\.(br|gz)$">
+  ForceType image/svg+xml
+</FilesMatch>
