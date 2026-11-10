@@ -25,22 +25,23 @@
 
 :root {
   /*
-   * Brand palette from the HEMA catalogue: navy, deep navy and amber, whose golden light matches the film.
-   * Accent (amber) is the single highlight colour: kickers, numbers, progress bar, rail, active states.
-   * Brass is deepened from the catalogue's #B98D45 to #926824 so small labels on light backgrounds pass WCAG AA.
+   * Navy-blue theme (chosen by MERAN, 2026-11-10): true navy #0F2A5C and deep navy #0A1F47 for dark areas,
+   * royal blue #2A5CA8 for buttons and labels on light backgrounds, light blue #A9CBF5 for highlights on dark
+   * backgrounds, cool off-white #F4F7FB. Every text pairing meets WCAG AA. ("brass" is a historical token
+   * name: it is the label colour on light backgrounds.)
    */
-  --background: 248 246 241;
+  --background: 244 247 251;
   --surface: 255 255 255;
-  --foreground: 15 24 40;
-  --muted: 88 96 112;
-  --border: 226 221 210;
-  --navy: 15 24 40;
-  --navy-deep: 9 14 25;
-  --navy-soft: 30 41 62;
-  --primary: 232 160 32;
-  --primary-foreground: 15 24 40;
-  --accent: 232 160 32;
-  --brass: 146 104 36;
+  --foreground: 10 31 71;
+  --muted: 84 96 118;
+  --border: 222 228 236;
+  --navy: 15 42 92;
+  --navy-deep: 10 31 71;
+  --navy-soft: 30 64 120;
+  --primary: 42 92 168;
+  --primary-foreground: 255 255 255;
+  --accent: 169 203 245;
+  --brass: 42 92 168;
 
   --font-body: 'Inter', 'Inter Fallback', system-ui, sans-serif;
   --font-display: 'Sora', 'Sora Fallback', system-ui, sans-serif;
