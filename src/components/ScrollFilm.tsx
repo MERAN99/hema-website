@@ -261,12 +261,16 @@ function useFilmSound(trackRef: React.RefObject<HTMLElement>) {
   useEffect(() => {
     // A remembered "on" can't start sound by itself: browsers need a tap or key press first.
     if (!readSoundPref()) return;
-    const resume = () => {
+    const resume = (e: Event) => {
+      // A tap on the sound button itself is handled by toggle(); resuming here as well would switch it straight off.
+      if ((e.target as Element | null)?.closest?.('[data-sound-toggle]')) return;
+      window.removeEventListener('pointerdown', resume);
+      window.removeEventListener('keydown', resume);
       setOn(true);
       start().catch(() => setOn(false));
     };
-    window.addEventListener('pointerdown', resume, { once: true });
-    window.addEventListener('keydown', resume, { once: true });
+    window.addEventListener('pointerdown', resume);
+    window.addEventListener('keydown', resume);
     return () => {
       window.removeEventListener('pointerdown', resume);
       window.removeEventListener('keydown', resume);
@@ -464,6 +468,7 @@ export function ScrollFilm() {
         <button
           type="button"
           onClick={sound.toggle}
+          data-sound-toggle
           aria-pressed={sound.on}
           aria-label={sound.on ? t.film.soundOff : t.film.soundOn}
           className="absolute end-4 top-24 flex min-h-11 items-center gap-2 rounded-full border border-white/20 bg-navy-deep/40 px-4 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10 md:end-6 md:top-28 xl:end-10"
