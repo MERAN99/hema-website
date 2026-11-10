@@ -33,6 +33,8 @@ const en = {
   },
   film: {
     rail: 'Chapters',
+    soundOn: 'Sound on',
+    soundOff: 'Sound off',
     // Index 0 is the opening (it uses `hero`); chapters 1–7 follow the film.
     chapters: [
       { kicker: '', title: '', body: '' },
@@ -207,6 +209,8 @@ const ku: Dict = {
   },
   film: {
     rail: 'بەشەکان',
+    soundOn: 'دەنگ بکەرەوە',
+    soundOff: 'دەنگ بکوژێنەوە',
     chapters: [
       { kicker: '', title: '', body: '' },
       { kicker: '01 · نەخشە و دیزاین', title: 'هەموو ڕێگایەک لەسەر کاغەز دەست پێدەکات.', body: 'ڕووپێوی، نەخشەکێشان و دیزاینێکی شایستە بەپێی ئەو بار و بەکارهێنانەی بۆ ڕێگاکە پێشبینی دەکرێت.' },
@@ -378,6 +382,8 @@ const ar: Dict = {
   },
   film: {
     rail: 'الفصول',
+    soundOn: 'تشغيل الصوت',
+    soundOff: 'إيقاف الصوت',
     chapters: [
       { kicker: '', title: '', body: '' },
       { kicker: '01 · المسح والتصميم', title: 'كل طريق يبدأ على الورق.', body: 'مسح ورسم خرائط وتصميم يناسب الأحمال وحركة المرور المتوقعة للطريق.' },

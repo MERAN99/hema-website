@@ -12,3 +12,4 @@ images-backup/
 id_*
 *_deploy
 .ftp-deploy-sync-state.json
+media/

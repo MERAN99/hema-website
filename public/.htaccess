@@ -39,7 +39,7 @@ ServerSignature Off
   Header always set Cross-Origin-Opener-Policy "same-origin"
   # Only our own scripts run. The one hash allows the font loader's onload="this.media='all'" in
   # index.html; inline styles are needed by the animation library. Fonts come from Google Fonts.
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; script-src-attr 'unsafe-hashes' 'sha256-MhtPZXr7+LpJUY5qtMutB+qWfQtMaPccfe7QXtCcEYc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; script-src-attr 'unsafe-hashes' 'sha256-MhtPZXr7+LpJUY5qtMutB+qWfQtMaPccfe7QXtCcEYc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
 
   # Hashed JS/CSS bundles never change: cache for a year.
   <FilesMatch "\.(js|css)$">

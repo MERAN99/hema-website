@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Volume2, VolumeX } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { scrollToId, scrollToY } from '../hooks/useSmoothScroll';
 import { FILM_FRAMES, FILM_HOLD, filmChapters } from '../data/company';
@@ -54,7 +54,10 @@ function useFilmEngine() {
       };
       frames[i] = im;
     };
-    // Coarse to fine: every 16th frame first, then every 4th, then the rest.
+    // The opening chapter (what visitors see first) loads in full first, so it plays smoothly right away;
+    // the rest follows coarse to fine: every 16th frame, then every 4th, then all.
+    const openingEnd = Math.ceil(filmChapters[1].from * FILM_HOLD * (N - 1)) + 2;
+    for (let i = 0; i < Math.min(N, openingEnd); i++) load(i);
     for (const step of [16, 4, 1]) for (let i = 0; i < N; i += step) load(i);
 
     const nearest = (i: number) => {
@@ -184,10 +187,133 @@ function useFilmEngine() {
   return { trackRef, canvasRef, captionRefs, statsRef, barRef, hintRef, active, started, goToChapter };
 }
 
+const SOUND_KEY = 'hema-film-sound';
+const readSoundPref = () => {
+  try {
+    return window.localStorage.getItem(SOUND_KEY) === 'on';
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Optional cinematic music for the film. Off by default (browsers block sound that starts by itself); the file
+ * is only fetched once the visitor turns sound on. It keeps playing while the film is on screen (also when the
+ * visitor stops scrolling), loops seamlessly (the file's end is crossfaded into its start), fades out over 1 s
+ * after the film and back in when the visitor scrolls back up.
+ * Fades use a Web Audio gain node, because iOS ignores HTMLMediaElement.volume.
+ */
+function useFilmSound(trackRef: React.RefObject<HTMLElement>) {
+  const [on, setOn] = useState(false);
+  const audioRef = useRef<{ el: HTMLAudioElement; ctx: AudioContext; gain: GainNode } | null>(null);
+  const insideRef = useRef(true);
+
+  const ensureAudio = () => {
+    if (audioRef.current) return audioRef.current;
+    const el = new Audio('./film/music.m4a');
+    el.loop = true;
+    el.preload = 'auto';
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new Ctx();
+    const gain = ctx.createGain();
+    gain.gain.value = 0;
+    ctx.createMediaElementSource(el).connect(gain).connect(ctx.destination);
+    audioRef.current = { el, ctx, gain };
+    return audioRef.current;
+  };
+
+  const fadeTo = (value: number, seconds: number) => {
+    const a = audioRef.current;
+    if (!a) return;
+    const now = a.ctx.currentTime;
+    a.gain.gain.cancelScheduledValues(now);
+    a.gain.gain.setValueAtTime(a.gain.gain.value, now);
+    a.gain.gain.linearRampToValueAtTime(value, now + seconds);
+  };
+
+  const start = async () => {
+    const a = ensureAudio();
+    await a.ctx.resume();
+    await a.el.play();
+    if (insideRef.current) fadeTo(1, 0.8);
+  };
+
+  const toggle = async () => {
+    const next = !on;
+    setOn(next);
+    try {
+      window.localStorage.setItem(SOUND_KEY, next ? 'on' : 'off');
+    } catch {
+      // Storage blocked (private mode): the choice just isn't remembered.
+    }
+    if (next) {
+      try {
+        await start();
+      } catch {
+        setOn(false);
+      }
+    } else {
+      fadeTo(0, 0.4);
+      window.setTimeout(() => audioRef.current?.el.pause(), 450);
+    }
+  };
+
+  useEffect(() => {
+    // A remembered "on" can't start sound by itself: browsers need a tap or key press first.
+    if (!readSoundPref()) return;
+    const resume = () => {
+      setOn(true);
+      start().catch(() => setOn(false));
+    };
+    window.addEventListener('pointerdown', resume, { once: true });
+    window.addEventListener('keydown', resume, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', resume);
+      window.removeEventListener('keydown', resume);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const t = trackRef.current;
+      if (!t) return;
+      const inside = window.scrollY < t.offsetTop + t.offsetHeight - window.innerHeight * 0.5;
+      if (inside === insideRef.current) return;
+      insideRef.current = inside;
+      const a = audioRef.current;
+      if (!a || !on) return;
+      if (inside) {
+        a.el.play().catch(() => undefined);
+        fadeTo(1, 0.8);
+      } else {
+        fadeTo(0, 1);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [on]);
+
+  // Stop everything when the film unmounts (e.g. on a language change, which re-mounts the page).
+  useEffect(
+    () => () => {
+      const a = audioRef.current;
+      if (!a) return;
+      a.el.pause();
+      a.ctx.close().catch(() => undefined);
+    },
+    [],
+  );
+
+  return { on, toggle };
+}
+
 export function ScrollFilm() {
   const { t, lang } = useLanguage();
   const reduce = useReducedMotion();
   const { trackRef, canvasRef, captionRefs, statsRef, barRef, hintRef, active, started, goToChapter } = useFilmEngine();
+  const sound = useFilmSound(trackRef);
 
   const go = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -332,6 +458,18 @@ export function ScrollFilm() {
         >
           {t.hero.scroll}
           <span aria-hidden className="lane-dash h-12 w-[3px] [background-size:100%_12px]" />
+        </button>
+
+        {/* Sound toggle */}
+        <button
+          type="button"
+          onClick={sound.toggle}
+          aria-pressed={sound.on}
+          aria-label={sound.on ? t.film.soundOff : t.film.soundOn}
+          className="absolute end-4 top-24 flex min-h-11 items-center gap-2 rounded-full border border-white/20 bg-navy-deep/40 px-4 text-sm font-medium text-white backdrop-blur transition hover:bg-white/10 md:end-6 md:top-28 xl:end-10"
+        >
+          {sound.on ? <Volume2 className="h-4 w-4 text-accent" aria-hidden /> : <VolumeX className="h-4 w-4" aria-hidden />}
+          <span className="hidden sm:inline">{sound.on ? t.film.soundOff : t.film.soundOn}</span>
         </button>
 
         {/* Progress bar */}
