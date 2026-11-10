@@ -9,6 +9,15 @@ import { Counter } from './ui/Counter';
 import { cn } from '../lib';
 
 const pad = (n: number) => String(n).padStart(4, '0');
+
+/** Opening frames that must be ready before the loading screen (#boot in index.html) fades out. */
+const BOOT_FRAMES = 6;
+const hideBoot = () => {
+  const boot = document.getElementById('boot');
+  if (!boot || boot.classList.contains('done')) return;
+  boot.classList.add('done');
+  window.setTimeout(() => boot.remove(), 450);
+};
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (a: number, b: number, x: number) => {
   const t = clamp01((x - a) / (b - a));
@@ -69,6 +78,7 @@ function useFilmEngine() {
         if (!alive) return;
         ready[i] = 1;
         dirty = true;
+        if (i < BOOT_FRAMES && ready.subarray(0, BOOT_FRAMES).every(Boolean)) hideBoot();
         finish();
       };
       im.onerror = finish;
@@ -98,7 +108,9 @@ function useFilmEngine() {
       }
     }
 
-    request(0);
+    for (let i = 0; i < BOOT_FRAMES; i++) request(i);
+    // Fade out by 2.5 s at the latest (the CSS in index.html does the same if this script never runs).
+    const bootTimer = window.setTimeout(hideBoot, 2100);
     const startStreaming = () => {
       streaming = true;
       pump();
@@ -220,6 +232,7 @@ function useFilmEngine() {
       window.removeEventListener('scroll', readScroll);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('load', afterLoad);
+      window.clearTimeout(bootTimer);
     };
   }, []);
 
