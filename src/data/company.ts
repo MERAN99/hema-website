@@ -86,7 +86,7 @@ export const featuredProjects: FeaturedProject[] = [
     length: '30 km',
     width: '7 m',
     period: '2014',
-    value: '$ 5,897,000',
+    value: '$5,897,000',
     partner: { en: 'Raouf Company', ku: 'کۆمپانیای ڕەئوف', ar: 'شركة رؤوف' },
   },
   {
@@ -281,7 +281,7 @@ export const fleet: { key: FleetKey; count: number; brands: string }[] = [
 
 export const fleetBrands = ['Vögele', 'Bomag', 'Sakai', 'MAN', 'Mercedes-Benz', 'Iveco', 'Renault', 'Volvo', 'Bobcat', 'Komatsu', 'Hitachi', 'Daewoo', 'Toyota', 'Mitsubishi', 'Perkins', 'Cummins'];
 
-export type TeamIcon = 'crown' | 'hardhat' | 'wallet' | 'scale' | 'chart' | 'truck' | 'ruler';
+export type TeamIcon = 'crown' | 'hardhat' | 'wallet' | 'scale' | 'chart' | 'truck' | 'ruler' | 'monitor';
 
 export const team: { icon: TeamIcon; role: L10n; name: L10n }[] = [
   { icon: 'crown', role: { en: 'General Manager', ku: 'بەڕێوەبەری گشتی', ar: 'المدير العام' }, name: { en: 'Nariman Abdulrahman Ahmed', ku: 'نەریمان عبدالرحمن احمد', ar: 'نريمان عبدالرحمن أحمد' } },
@@ -291,6 +291,7 @@ export const team: { icon: TeamIcon; role: L10n; name: L10n }[] = [
   { icon: 'chart', role: { en: 'Projects Director', ku: 'بەڕێوەبەری پڕۆژەکان', ar: 'مدير المشاريع' }, name: { en: 'Rawand Nariman Abdulrahman', ku: 'ڕەوەند نەریمان عبدالرحمن', ar: 'رواند نريمان عبدالرحمن' } },
   { icon: 'truck', role: { en: 'Logistics', ku: 'بەشی لۆجستی', ar: 'القسم اللوجستي' }, name: { en: 'Rahel Sarkawt Mohammed', ku: 'ڕەهێڵ سەرکەوت محمد', ar: 'راهيل سركوت محمد' } },
   { icon: 'ruler', role: { en: 'Surveying Engineering', ku: 'ئەندازیاری ڕووپێوی', ar: 'هندسة المساحة' }, name: { en: 'Jamal Hassan Mohammad Amin', ku: 'جەمال حسن محمد ئەمین', ar: 'جمال حسن محمد أمين' } },
+  { icon: 'monitor', role: { en: 'IT Department', ku: 'بەشی تەکنەلۆجیای زانیاری', ar: 'قسم تكنولوجيا المعلومات' }, name: { en: 'Abdulla Mohammed', ku: 'عەبدوڵا محەمەد', ar: 'عبدالله محمد' } },
 ];
 
 export const certificates = ['cert-1.jpg', 'cert-2.jpg', 'cert-3.jpg', 'cert-4.jpg', 'cert-5.jpg'];

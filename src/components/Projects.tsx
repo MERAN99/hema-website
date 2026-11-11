@@ -26,7 +26,7 @@ function ProjectRow({ project, index, onOpen }: { project: FeaturedProject; inde
     { icon: MapPin, label: t.projects.location, value: project.location[lang] },
     project.length && { icon: Ruler, label: t.projects.length, value: localize(project.width ? `${project.length} × ${project.width}` : project.length) },
     { icon: Calendar, label: t.projects.period, value: project.period },
-    { icon: Wallet, label: t.projects.value, value: iqd ? `${project.value} ${t.record.iqd}` : project.value },
+    { icon: Wallet, label: t.projects.value, value: iqd ? `${project.value} ${t.record.iqd}` : `\u2066${project.value}\u2069` },
     project.partner && { icon: Handshake, label: t.projects.partner, value: project.partner[lang] },
   ].filter(Boolean) as { icon: typeof MapPin; label: string; value: string }[];
 

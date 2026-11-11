@@ -6,7 +6,8 @@ import { SectionHeading } from './ui/SectionHeading';
 
 export function TrackRecord() {
   const { t, lang } = useLanguage();
-  const money = (v: number, c: 'IQD' | 'USD') => (c === 'USD' ? `$ ${formatNumber(v)}` : `${formatNumber(v)} ${t.record.iqd}`);
+  const money = (v: number, c: 'IQD' | 'USD') => (c === 'USD' ? `\u2066$${formatNumber(v)}\u2069` : // isolate keeps "$" before the number in Kurdish/Arabic
+      `${formatNumber(v)} ${t.record.iqd}`);
   const total = trackRecord.filter((r) => r.currency === 'IQD').reduce((s, r) => s + r.value, 0);
 
   return (
