@@ -44,67 +44,87 @@ function useFilmEngine() {
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const set = window.innerWidth < 768 ? 'mobile' : 'desktop';
     const N = FILM_FRAMES;
+    // Two copies of every frame: a light one (384 px, ~10 KB) and the full-quality one. The light copies of the
+    // whole film arrive within seconds, so scrolling is smooth from the first visit; each frame is then swapped
+    // for its full-quality copy as soon as that has loaded (frames on screen first).
     const frames: HTMLImageElement[] = new Array(N);
     const ready = new Uint8Array(N);
+    const lite: HTMLImageElement[] = new Array(N);
+    const liteReady = new Uint8Array(N);
     let dirty = true;
     let alive = true;
 
-    // Frames download a few at a time so they never crowd out the page's own code, fonts and poster
-    // (the server speaks HTTP/1.1: only ~6 connections). Frame 1 comes first (it's preloaded in index.html);
-    // the rest start once the page has loaded, nearest to the playhead first, then coarse to fine.
-    // On slow or data-saving connections only every 4th frame is fetched outside the visible stretch.
+    // Frames download a dozen at a time (the site is served through Cloudflare over HTTP/2 and HTTP/3, so
+    // many requests share one connection) without crowding out the page's own code, fonts and poster.
+    // Frame 1 comes first (it's preloaded in index.html); the rest start once the page has loaded.
+    // On slow or data-saving connections full-quality frames are only fetched around the playhead.
     const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
     const slow = !!conn && (!!conn.saveData || /(^|-)(2g|3g)$/.test(conn.effectiveType ?? ''));
-    const MAX_ACTIVE = slow ? 2 : 6;
+    const MAX_ACTIVE = slow ? 4 : 12;
+    // Full quality (1280×720) on every screen, phones included; the smaller set only on slow or data-saving connections.
+    const set = slow ? 'mobile' : 'desktop';
     // Look far enough ahead to cover the whole opening chapter, so the first thing visitors scroll is complete.
     const LOOK_AHEAD = Math.ceil(filmChapters[1].from * FILM_HOLD * (N - 1)) + 4;
     const requested = new Uint8Array(N);
+    const liteRequested = new Uint8Array(N);
     let active = 0;
     let streaming = false;
 
-    const request = (i: number) => {
-      requested[i] = 1;
+    const request = (i: number, light = false) => {
+      (light ? liteRequested : requested)[i] = 1;
       active++;
       const im = new Image();
       im.decoding = 'async';
-      im.setAttribute('fetchpriority', i === 0 ? 'high' : 'low');
+      im.setAttribute('fetchpriority', i === 0 && !light ? 'high' : 'low');
       const finish = () => {
         active--;
         pump();
       };
       im.onload = () => {
         if (!alive) return;
-        ready[i] = 1;
+        if (light) liteReady[i] = 1;
+        else ready[i] = 1;
         dirty = true;
-        if (i < BOOT_FRAMES && ready.subarray(0, BOOT_FRAMES).every(Boolean)) hideBoot();
+        if (!light && i < BOOT_FRAMES && ready.subarray(0, BOOT_FRAMES).every(Boolean)) hideBoot();
         finish();
       };
       im.onerror = finish;
-      im.src = `./film/${set}/f_${pad(i + 1)}.webp`;
-      frames[i] = im;
+      im.src = light ? `./film/lite/f_${pad(i + 1)}.webp` : `./film/${set}/f_${pad(i + 1)}.webp`;
+      if (light) lite[i] = im;
+      else frames[i] = im;
     };
 
-    const nextFrame = () => {
+    type Job = [number, boolean];
+    const nextJob = (): Job | null => {
       const here = Math.round(Math.min(1, target / FILM_HOLD) * (N - 1));
-      // What the visitor is about to see: a stretch ahead of the playhead, and a little behind it.
-      for (let d = 0; d < LOOK_AHEAD; d++) {
-        const ahead = here + d;
-        if (ahead < N && !requested[ahead]) return ahead;
-        const behind = here - d;
-        if (d < 6 && behind >= 0 && !requested[behind]) return behind;
+      // 1. Full quality for what is on screen now and just ahead.
+      for (let d = 0; d < 10; d++) {
+        if (here + d < N && !requested[here + d]) return [here + d, false];
+        if (d < 3 && here - d >= 0 && !requested[here - d]) return [here - d, false];
       }
-      for (const step of slow ? [16, 4] : [16, 4, 1]) for (let i = 0; i < N; i += step) if (!requested[i]) return i;
-      return -1;
+      // 2. Light copies of the whole film: around the playhead first, then coarse to fine.
+      for (let d = 0; d < LOOK_AHEAD; d++) {
+        if (here + d < N && !liteRequested[here + d] && !ready[here + d]) return [here + d, true];
+        if (d < 6 && here - d >= 0 && !liteRequested[here - d] && !ready[here - d]) return [here - d, true];
+      }
+      for (const step of [8, 1]) for (let i = 0; i < N; i += step) if (!liteRequested[i] && !ready[i]) return [i, true];
+      // 3. Full quality for the rest: ahead of the playhead first, then coarse to fine.
+      for (let d = 0; d < LOOK_AHEAD; d++) {
+        if (here + d < N && !requested[here + d]) return [here + d, false];
+        if (d < 6 && here - d >= 0 && !requested[here - d]) return [here - d, false];
+      }
+      if (slow) return null;
+      for (const step of [16, 4, 1]) for (let i = 0; i < N; i += step) if (!requested[i]) return [i, false];
+      return null;
     };
 
     function pump() {
       if (!alive || !streaming) return;
       while (active < MAX_ACTIVE) {
-        const i = nextFrame();
-        if (i < 0) return;
-        request(i);
+        const job = nextJob();
+        if (!job) return;
+        request(job[0], job[1]);
       }
     }
 
@@ -119,10 +139,12 @@ function useFilmEngine() {
     if (document.readyState === 'complete') afterLoad();
     else window.addEventListener('load', afterLoad, { once: true });
 
+    /** Best loaded copy of frame i: full quality if it has arrived, otherwise the light one. */
+    const pick = (i: number) => (ready[i] ? frames[i] : liteReady[i] ? lite[i] : null);
     const nearest = (i: number) => {
       for (let d = 0; d < N; d++) {
-        if (i - d >= 0 && ready[i - d]) return i - d;
-        if (i + d < N && ready[i + d]) return i + d;
+        if (i - d >= 0 && (ready[i - d] || liteReady[i - d])) return i - d;
+        if (i + d < N && (ready[i + d] || liteReady[i + d])) return i + d;
       }
       return -1;
     };
@@ -175,8 +197,9 @@ function useFilmEngine() {
       const frac = fi - i0;
       const a = nearest(i0);
       if (a >= 0) {
-        drawCover(frames[a], 1);
-        if (a === i0 && frac > 0.01 && i0 + 1 < N && ready[i0 + 1]) drawCover(frames[i0 + 1], frac);
+        drawCover(pick(a)!, 1);
+        const next = a === i0 && frac > 0.01 && i0 + 1 < N ? pick(i0 + 1) : null;
+        if (next) drawCover(next, frac);
         if (!drewFirst) {
           drewFirst = true;
           setStarted(true);
@@ -380,7 +403,7 @@ export function ScrollFilm() {
   const reduce = useReducedMotion();
   const { trackRef, canvasRef, captionRefs, statsRef, barRef, hintRef, active, started, goToChapter } = useFilmEngine();
   const sound = useFilmSound(trackRef);
-  const posterSet = typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop';
+  const posterSet = 'desktop'; // same file as the preload in index.html
 
   const go = (id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
