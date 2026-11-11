@@ -56,7 +56,7 @@ ServerSignature Off
     Header append Vary Accept-Encoding
   </FilesMatch>
   # Photos keep their names when replaced: cache for a week.
-  <FilesMatch "\.(webp|jpg|jpeg|png|ico)$">
+  <FilesMatch "\.(webp|avif|jpg|jpeg|png|ico)$">
     Header set Cache-Control "public, max-age=604800"
   </FilesMatch>
   # Always check for a new page so updates show immediately.
@@ -67,6 +67,7 @@ ServerSignature Off
 
 <IfModule mod_mime.c>
   AddType image/webp .webp
+  AddType image/avif .avif
   AddEncoding br .br
   AddEncoding gzip .gz
 </IfModule>

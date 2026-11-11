@@ -12,6 +12,17 @@ const pad = (n: number) => String(n).padStart(4, '0');
 
 /** Opening frames that must be ready before the loading screen (#boot in index.html) fades out. */
 const BOOT_FRAMES = 6;
+// A 1×1 AVIF image: if the browser can show it, the film is loaded as AVIF (about a quarter smaller than WebP
+// at the same quality); older browsers keep the WebP frames.
+const AVIF_PROBE =
+  'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADrbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAETAAAAIQAAAChpaW5mAAAAAAABAAAAGmluZmUCAAAAAAEAAGF2MDFDb2xvcgAAAABqaXBycAAAAEtpcGNvAAAAFGlzcGUAAAAAAAAAAQAAAAEAAAAQcGl4aQAAAAADCAgIAAAADGF2MUOBAAwAAAAAE2NvbHJuY2x4AAEADQAGgAAAABdpcG1hAAAAAAAAAAEAAQQBAoMEAAAAKW1kYXQSAAoIGAAGiAhoNCAyExlHh4Yhh5555oAAAJBAyRxhQr4=';
+const avifSupported = new Promise<boolean>((resolve) => {
+  if (typeof Image === 'undefined') return resolve(false);
+  const probe = new Image();
+  probe.onload = () => resolve(probe.width === 1);
+  probe.onerror = () => resolve(false);
+  probe.src = AVIF_PROBE;
+});
 const hideBoot = () => {
   const boot = document.getElementById('boot');
   if (!boot || boot.classList.contains('done')) return;
@@ -73,6 +84,7 @@ function useFilmEngine() {
     const liteRequested = new Uint8Array(N);
     let active = 0;
     let streaming = false;
+    let avif = false;
 
     const request = (i: number, light = false) => {
       (light ? liteRequested : requested)[i] = 1;
@@ -93,7 +105,9 @@ function useFilmEngine() {
         finish();
       };
       im.onerror = finish;
-      im.src = light ? `./film/lite/f_${pad(i + 1)}.webp?v=2` : `./film/${set}/f_${pad(i + 1)}.webp`;
+      // The first frames are WebP (the first one is preloaded by index.html); the rest are AVIF where supported.
+      if (light) im.src = `./film/lite/f_${pad(i + 1)}.${avif ? 'avif' : 'webp?v=2'}`;
+      else im.src = `./film/${set}/f_${pad(i + 1)}.${avif && set === 'desktop' && i >= BOOT_FRAMES ? 'avif' : 'webp'}`;
       if (light) lite[i] = im;
       else frames[i] = im;
     };
@@ -143,7 +157,13 @@ function useFilmEngine() {
       streaming = true;
       pump();
     };
-    const afterLoad = () => window.setTimeout(startStreaming, 150);
+    const afterLoad = () =>
+      window.setTimeout(() => {
+        void avifSupported.then((ok) => {
+          avif = ok;
+          startStreaming();
+        });
+      }, 150);
     if (document.readyState === 'complete') afterLoad();
     else window.addEventListener('load', afterLoad, { once: true });
 
