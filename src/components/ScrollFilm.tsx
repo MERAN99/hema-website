@@ -43,9 +43,12 @@ function useFilmEngine() {
     const track = trackRef.current!;
     const canvas = canvasRef.current!;
     const ctx = canvas.getContext('2d')!;
+    // Smooth scaling, so a light copy shown for a moment looks soft rather than blocky.
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const N = FILM_FRAMES;
-    // Two copies of every frame: a light one (384 px, ~10 KB) and the full-quality one. The light copies of the
+    // Two copies of every frame: a light one (640 px, ~22 KB) and the full-quality one. The light copies of the
     // whole film arrive within seconds, so scrolling is smooth from the first visit; each frame is then swapped
     // for its full-quality copy as soon as that has loaded (frames on screen first).
     const frames: HTMLImageElement[] = new Array(N);
@@ -90,7 +93,7 @@ function useFilmEngine() {
         finish();
       };
       im.onerror = finish;
-      im.src = light ? `./film/lite/f_${pad(i + 1)}.webp` : `./film/${set}/f_${pad(i + 1)}.webp`;
+      im.src = light ? `./film/lite/f_${pad(i + 1)}.webp?v=2` : `./film/${set}/f_${pad(i + 1)}.webp`;
       if (light) lite[i] = im;
       else frames[i] = im;
     };
@@ -98,21 +101,26 @@ function useFilmEngine() {
     type Job = [number, boolean];
     const nextJob = (): Job | null => {
       const here = Math.round(Math.min(1, target / FILM_HOLD) * (N - 1));
-      // 1. Full quality for what is on screen now and just ahead.
-      for (let d = 0; d < 10; d++) {
-        if (here + d < N && !requested[here + d]) return [here + d, false];
-        if (d < 3 && here - d >= 0 && !requested[here - d]) return [here - d, false];
+      // "Ahead" follows the way the visitor is scrolling, so scrolling back up loads the frames above.
+      const at = (d: number) => here + d * dir;
+      const ok = (i: number) => i >= 0 && i < N;
+      // 1. Full quality for what is on screen now and the next frames in the direction of travel
+      //    (further ahead while scrolling fast).
+      const reach = 12 + Math.min(24, Math.round(speed * 4));
+      for (let d = 0; d < reach; d++) {
+        if (ok(at(d)) && !requested[at(d)]) return [at(d), false];
+        if (d < 3 && ok(at(-d)) && !requested[at(-d)]) return [at(-d), false];
       }
-      // 2. Light copies of the whole film: around the playhead first, then coarse to fine.
+      // 2. Light copies of the whole film: around the playhead first (in the direction of travel), then coarse to fine.
       for (let d = 0; d < LOOK_AHEAD; d++) {
-        if (here + d < N && !liteRequested[here + d] && !ready[here + d]) return [here + d, true];
-        if (d < 6 && here - d >= 0 && !liteRequested[here - d] && !ready[here - d]) return [here - d, true];
+        if (ok(at(d)) && !liteRequested[at(d)] && !ready[at(d)]) return [at(d), true];
+        if (d < 6 && ok(at(-d)) && !liteRequested[at(-d)] && !ready[at(-d)]) return [at(-d), true];
       }
       for (const step of [8, 1]) for (let i = 0; i < N; i += step) if (!liteRequested[i] && !ready[i]) return [i, true];
       // 3. Full quality for the rest: ahead of the playhead first, then coarse to fine.
       for (let d = 0; d < LOOK_AHEAD; d++) {
-        if (here + d < N && !requested[here + d]) return [here + d, false];
-        if (d < 6 && here - d >= 0 && !requested[here - d]) return [here - d, false];
+        if (ok(at(d)) && !requested[at(d)]) return [at(d), false];
+        if (d < 6 && ok(at(-d)) && !requested[at(-d)]) return [at(-d), false];
       }
       if (slow) return null;
       for (const step of [16, 4, 1]) for (let i = 0; i < N; i += step) if (!requested[i]) return [i, false];
@@ -168,6 +176,8 @@ function useFilmEngine() {
     };
 
     let target = 0;
+    let dir = 1; // 1 while scrolling down the film, -1 while scrolling back up
+    let speed = 0; // frames moved per scroll event, smoothed
     let cur = 0;
     let raf = 0;
     let lastActive = -1;
@@ -175,7 +185,12 @@ function useFilmEngine() {
 
     const readScroll = () => {
       const max = track.offsetHeight - window.innerHeight;
-      target = max > 0 ? clamp01(-track.getBoundingClientRect().top / max) : 0;
+      const next = max > 0 ? clamp01(-track.getBoundingClientRect().top / max) : 0;
+      const moved = (Math.min(1, next / FILM_HOLD) - Math.min(1, target / FILM_HOLD)) * (N - 1);
+      if (moved > 0.01) dir = 1;
+      else if (moved < -0.01) dir = -1;
+      speed = speed * 0.7 + Math.abs(moved) * 0.3;
+      target = next;
       pump();
     };
 
