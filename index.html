@@ -28,9 +28,9 @@
     <meta name="twitter:description" content="Grade 1 general contractor building roads, buildings, water networks and bridges across the Kurdistan Region and Iraq since 2004." />
     <meta name="twitter:image" content="https://hemacompany.com/og-image.jpg" />
     <title>Hema Company | General Contracting, Roads &amp; Infrastructure</title>
-    <!-- Loading screen: shown on the very first paint (no JavaScript needed). The film hides it as soon as its
-         opening frames are ready; the CSS animation below fades it out by 2.5 s regardless, so nobody waits longer.
-         The rest of the film keeps loading in the background. -->
+    <!-- Loading screen: shown on the very first paint (no JavaScript needed). The film fills the bar as the first
+         half of the film loads in full quality and hides the screen when it is done (or after 15 s at most); the
+         CSS animation below fades it out at 16 s regardless. The rest of the film keeps loading in the background. -->
     <style>
       #boot {
         position: fixed;
@@ -40,7 +40,7 @@
         place-items: center;
         background: #0a1f47;
         transition: opacity 0.4s ease, visibility 0.4s;
-        animation: boot-out 0.4s ease 2.1s forwards;
+        animation: boot-out 0.4s ease 16s forwards;
       }
       #boot.done {
         opacity: 0;
@@ -61,7 +61,7 @@
       }
       #boot .lane {
         position: relative;
-        width: 120px;
+        width: 160px;
         height: 3px;
         overflow: hidden;
         border-radius: 3px;
@@ -74,6 +74,22 @@
         width: 200%;
         background: repeating-linear-gradient(90deg, #a9cbf5 0 14px, transparent 14px 26px);
         animation: boot-lane 0.9s linear infinite;
+      }
+      #boot .fill {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: #a9cbf5;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.25s ease-out;
+      }
+      #boot .pct {
+        min-height: 1em;
+        font: 600 12px/1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+        letter-spacing: 0.08em;
+        color: #a9cbf5;
+        font-variant-numeric: tabular-nums;
       }
       #boot .sr {
         position: absolute;
@@ -106,7 +122,8 @@
     <div id="boot" role="status">
       <div class="mark">
         <img src="./images/logo-mark.webp" width="64" height="64" alt="" />
-        <span class="lane"></span>
+        <span class="lane"><span class="fill"></span></span>
+        <span class="pct" aria-hidden="true"></span>
       </div>
       <span class="sr">Loading · بارکردن · جارٍ التحميل</span>
     </div>

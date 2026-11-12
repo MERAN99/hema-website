@@ -9,9 +9,12 @@ import { Counter } from './ui/Counter';
 import { cn } from '../lib';
 
 const pad = (n: number) => String(n).padStart(4, '0');
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 
-/** Opening frames that must be ready before the loading screen (#boot in index.html) fades out. */
+/** Opening frames that are always WebP (the first one is preloaded by index.html). */
 const BOOT_FRAMES = 6;
+/** The loading screen waits at most this long for the first half of the film, then shows the site anyway. */
+const BOOT_MAX_WAIT = 15000;
 // A 1×1 AVIF image: if the browser can show it, the film is loaded as AVIF (about a quarter smaller than WebP
 // at the same quality); older browsers keep the WebP frames.
 const AVIF_PROBE =
@@ -23,13 +26,20 @@ const avifSupported = new Promise<boolean>((resolve) => {
   probe.onerror = () => resolve(false);
   probe.src = AVIF_PROBE;
 });
+/** Shows how much of the first half of the film has loaded on the loading screen (#boot in index.html). */
+const showBootProgress = (share: number) => {
+  const pct = Math.round(clamp01(share) * 100);
+  const fill = document.querySelector<HTMLElement>('#boot .fill');
+  const label = document.querySelector<HTMLElement>('#boot .pct');
+  if (fill) fill.style.transform = `scaleX(${pct / 100})`;
+  if (label) label.textContent = `${pct}%`;
+};
 const hideBoot = () => {
   const boot = document.getElementById('boot');
   if (!boot || boot.classList.contains('done')) return;
   boot.classList.add('done');
   window.setTimeout(() => boot.remove(), 450);
 };
-const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const smooth = (a: number, b: number, x: number) => {
   const t = clamp01((x - a) / (b - a));
   return t * t * (3 - 2 * t);
@@ -85,6 +95,25 @@ function useFilmEngine() {
     let active = 0;
     let streaming = false;
     let avif = false;
+    // The loading screen stays until the first half of the film has loaded in full quality.
+    const HALF = Math.ceil(N / 2);
+    const settled = new Uint8Array(N); // full-quality frame finished (loaded or failed)
+    let halfDone = 0;
+    let booting = true;
+    const finishBoot = () => {
+      if (!booting) return;
+      booting = false;
+      showBootProgress(1);
+      hideBoot();
+    };
+    const settle = (i: number) => {
+      if (settled[i]) return;
+      settled[i] = 1;
+      if (i >= HALF || !booting) return;
+      halfDone++;
+      showBootProgress(halfDone / HALF);
+      if (halfDone >= HALF) finishBoot();
+    };
 
     const request = (i: number, light = false) => {
       (light ? liteRequested : requested)[i] = 1;
@@ -94,6 +123,7 @@ function useFilmEngine() {
       im.setAttribute('fetchpriority', i === 0 && !light ? 'high' : 'low');
       const finish = () => {
         active--;
+        if (!light) settle(i);
         pump();
       };
       im.onload = () => {
@@ -101,7 +131,6 @@ function useFilmEngine() {
         if (light) liteReady[i] = 1;
         else ready[i] = 1;
         dirty = true;
-        if (!light && i < BOOT_FRAMES && ready.subarray(0, BOOT_FRAMES).every(Boolean)) hideBoot();
         finish();
       };
       im.onerror = finish;
@@ -114,6 +143,8 @@ function useFilmEngine() {
 
     type Job = [number, boolean];
     const nextJob = (): Job | null => {
+      // 0. While the loading screen is up: the first half of the film, in full quality, in order.
+      if (booting) for (let i = 0; i < HALF; i++) if (!requested[i]) return [i, false];
       const here = Math.round(Math.min(1, target / FILM_HOLD) * (N - 1));
       // "Ahead" follows the way the visitor is scrolling, so scrolling back up loads the frames above.
       const at = (d: number) => here + d * dir;
@@ -151,21 +182,16 @@ function useFilmEngine() {
     }
 
     for (let i = 0; i < BOOT_FRAMES; i++) request(i);
-    // Fade out by 2.5 s at the latest (the CSS in index.html does the same if this script never runs).
-    const bootTimer = window.setTimeout(hideBoot, 2100);
-    const startStreaming = () => {
+    // Never keep visitors waiting on a very slow connection: show the site after BOOT_MAX_WAIT regardless
+    // (the CSS in index.html does the same a little later if this script never runs).
+    const bootTimer = window.setTimeout(finishBoot, BOOT_MAX_WAIT);
+    // Start loading the rest straight away, behind the loading screen.
+    void avifSupported.then((ok) => {
+      if (!alive) return;
+      avif = ok;
       streaming = true;
       pump();
-    };
-    const afterLoad = () =>
-      window.setTimeout(() => {
-        void avifSupported.then((ok) => {
-          avif = ok;
-          startStreaming();
-        });
-      }, 150);
-    if (document.readyState === 'complete') afterLoad();
-    else window.addEventListener('load', afterLoad, { once: true });
+    });
 
     /** Best loaded copy of frame i: full quality if it has arrived, otherwise the light one. */
     const pick = (i: number) => (ready[i] ? frames[i] : liteReady[i] ? lite[i] : null);
@@ -289,7 +315,6 @@ function useFilmEngine() {
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', readScroll);
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('load', afterLoad);
       window.clearTimeout(bootTimer);
     };
   }, []);
