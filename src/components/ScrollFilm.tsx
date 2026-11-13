@@ -9,6 +9,8 @@ import { Counter } from './ui/Counter';
 import { cn } from '../lib';
 
 const pad = (n: number) => String(n).padStart(4, '0');
+/** Bump when the film frames change, so browsers and Cloudflare fetch the new ones instead of cached copies. */
+const FILM_VERSION = '?v=3';
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 
 /** Opening frames that are always WebP (the first one is preloaded by index.html). */
@@ -135,8 +137,8 @@ function useFilmEngine() {
       };
       im.onerror = finish;
       // The first frames are WebP (the first one is preloaded by index.html); the rest are AVIF where supported.
-      if (light) im.src = `./film/lite/f_${pad(i + 1)}.${avif ? 'avif' : 'webp?v=2'}`;
-      else im.src = `./film/${set}/f_${pad(i + 1)}.${avif && set === 'desktop' && i >= BOOT_FRAMES ? 'avif' : 'webp'}`;
+      if (light) im.src = `./film/lite/f_${pad(i + 1)}.${avif ? 'avif' : 'webp'}${FILM_VERSION}`;
+      else im.src = `./film/${set}/f_${pad(i + 1)}.${avif && set === 'desktop' && i >= BOOT_FRAMES ? 'avif' : 'webp'}${FILM_VERSION}`;
       if (light) lite[i] = im;
       else frames[i] = im;
     };
@@ -490,7 +492,7 @@ export function ScrollFilm() {
       <div
         className="sticky top-0 h-[100svh] overflow-hidden bg-cover bg-center"
         // Frame 1 (preloaded in index.html) shows as a background instantly, until the canvas has drawn it.
-        style={started ? undefined : { backgroundImage: `url('./film/${posterSet}/f_0001.webp')` }}
+        style={started ? undefined : { backgroundImage: `url('./film/${posterSet}/f_0001.webp${FILM_VERSION}')` }}
       >
         <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
 
