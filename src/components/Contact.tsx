@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Phone, Send } from 'lucide-react';
+import { CheckCircle2, Loader2, Mail, Phone, Send } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { contact, parallaxSet } from '../data/company';
 import { cn } from '../lib';
@@ -8,12 +8,17 @@ import { Reveal } from './ui/Reveal';
 import { SectionHeading } from './ui/SectionHeading';
 
 type Field = 'name' | 'email' | 'phone' | 'message';
+type Status = 'idle' | 'sending' | 'success' | 'error';
+
+const empty: Record<Field, string> = { name: '', email: '', phone: '', message: '' };
 
 export function Contact() {
   const { t } = useLanguage();
   const f = t.contact.form;
-  const [values, setValues] = useState<Record<Field, string>>({ name: '', email: '', phone: '', message: '' });
+  const [values, setValues] = useState<Record<Field, string>>(empty);
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
+  const [status, setStatus] = useState<Status>('idle');
+  const [honeypot, setHoneypot] = useState('');
 
   const errors: Partial<Record<Field, string>> = {};
   if (!values.name.trim()) errors.name = f.required;
@@ -21,12 +26,45 @@ export function Contact() {
   else if (!/^\S+@\S+\.\S+$/.test(values.email)) errors.email = f.invalidEmail;
   if (!values.message.trim()) errors.message = f.required;
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setTouched({ name: true, email: true, message: true });
-    if (Object.keys(errors).length) return;
+  /** Old behaviour: open the visitor's email app with the message ready to send. */
+  const openMailApp = () => {
     const body = `${values.message}\n\n${values.name}\n${values.email}${values.phone ? `\n${values.phone}` : ''}`;
     window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(f.subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setTouched({ name: true, email: true, message: true });
+    if (Object.keys(errors).length || status === 'sending') return;
+    setStatus('sending');
+    let res: Response;
+    try {
+      res = await fetch('./contact.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ ...values, subject: f.subject, website: honeypot }),
+      });
+    } catch {
+      // Network error: never leave the visitor stuck.
+      setStatus('idle');
+      openMailApp();
+      return;
+    }
+    const isJson = (res.headers.get('content-type') ?? '').includes('application/json');
+    if (!isJson) {
+      // contact.php isn't running here (e.g. `npm run dev`, or a host without PHP): fall back to the email app.
+      setStatus('idle');
+      openMailApp();
+      return;
+    }
+    const data = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+    if (res.ok && data?.ok) {
+      setStatus('success');
+      setValues(empty);
+      setTouched({});
+    } else {
+      setStatus('error');
+    }
   };
 
   const input = (name: Field, label: string, opts: { type?: string; textarea?: boolean; autoComplete?: string } = {}) => {
@@ -84,17 +122,35 @@ export function Contact() {
         </div>
 
         <Reveal delay={0.1}>
-          <form noValidate onSubmit={onSubmit} className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur md:p-8">
+          <form noValidate onSubmit={onSubmit} className="relative rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 backdrop-blur md:p-8">
+            {/* Honeypot: hidden from people, bots fill it in and get ignored by contact.php. */}
+            <div aria-hidden="true" className="pointer-events-none absolute start-0 top-0 h-0 w-0 overflow-hidden opacity-0">
+              <label htmlFor="f-website">Website</label>
+              <input id="f-website" name="website" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+            </div>
             <div className="grid gap-5 sm:grid-cols-2">
               {input('name', f.name, { autoComplete: 'name' })}
               {input('email', f.email, { type: 'email', autoComplete: 'email' })}
               <div className="sm:col-span-2">{input('phone', f.phone, { type: 'tel', autoComplete: 'tel' })}</div>
               {input('message', f.message, { textarea: true })}
             </div>
-            <button type="submit" className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-accent px-6 font-semibold text-navy-deep transition hover:bg-white active:scale-[0.99] sm:w-auto">
-              <Send className="h-4 w-4 rtl:-scale-x-100" />
-              {f.send}
+            <button
+              type="submit"
+              disabled={status === 'sending'}
+              className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-accent px-6 font-semibold text-navy-deep transition hover:bg-white active:scale-[0.99] disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+            >
+              {status === 'sending' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4 rtl:-scale-x-100" />}
+              {status === 'sending' ? f.sending : f.send}
             </button>
+            <div aria-live="polite">
+              {status === 'success' && (
+                <p className="mt-4 flex items-start gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm text-emerald-200">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+                  {f.success}
+                </p>
+              )}
+              {status === 'error' && <p className="mt-4 rounded-2xl border border-red-400/30 bg-red-400/10 p-4 text-sm text-red-200">{f.error}</p>}
+            </div>
             <p className="mt-4 text-sm text-white/50">{f.note}</p>
           </form>
         </Reveal>

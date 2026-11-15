@@ -29,7 +29,7 @@ export function imgSet(name: string, sizes: string) {
 
 export const contact = {
   phones: ['07701557702', '07701222351'],
-  email: 'hemacompany12@gmail.com',
+  email: 'info@hemacompany.com',
 };
 
 export type FeaturedProject = {
@@ -263,6 +263,7 @@ export const trackRecord: RecordRow[] = [
     currency: 'IQD',
     period: '2021',
   },
+  { title: projectTitle('kunamasi-phase2'), location: { en: 'Sharbazher / Mawat District', ku: 'شار باژێڕ / قەزای ماوەت', ar: 'شارباژير / قضاء ماوت' }, value: 15846160000, currency: 'IQD', period: '2025' },
 ];
 
 export type FleetKey = 'pavers' | 'steelRollers' | 'tyreRollers' | 'trucks' | 'loaders' | 'excavators' | 'grader' | 'pickups' | 'generators';

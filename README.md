@@ -46,6 +46,6 @@ public/images/     photos and logo extracted from the catalogue
 
 ## Things to check before going live
 
-- The contact form opens the visitor's email app addressed to hemacompany12@gmail.com (no server needed). Swap in a form service (Formspree, EmailJS) if you want messages delivered directly.
+- The contact form posts to `contact.php` (in `public/`, copied to the `dist` root on build), which sends the message to info@hemacompany.com with PHP `mail()`. The host must run PHP (the Webuzo server does). If the script can't be reached (for example in `npm run dev`), the form falls back to opening the visitor's email app addressed to info@hemacompany.com.
 - English and Arabic spellings of staff names and place names were transliterated from the Kurdish catalogue; please confirm them.
 - The generator brand written "Caminz" in the catalogue is shown as Cummins.
