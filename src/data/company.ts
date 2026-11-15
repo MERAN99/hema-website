@@ -30,6 +30,10 @@ export function imgSet(name: string, sizes: string) {
 export const contact = {
   phones: ['07701557702', '07701222351'],
   email: 'info@hemacompany.com',
+  social: {
+    facebook: 'https://www.facebook.com/profile.php?id=61595090812646',
+    instagram: 'https://www.instagram.com/hemacompany.construction/',
+  },
 };
 
 export type FeaturedProject = {

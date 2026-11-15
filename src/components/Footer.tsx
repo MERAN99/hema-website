@@ -1,9 +1,14 @@
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Facebook, Instagram } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
 import { scrollToId } from '../hooks/useSmoothScroll';
 import { contact, img } from '../data/company';
 
 const links = ['about', 'services', 'projects', 'fleet', 'team', 'contact'] as const;
+
+const socials = [
+  { name: 'Facebook', href: contact.social.facebook, Icon: Facebook },
+  { name: 'Instagram', href: contact.social.instagram, Icon: Instagram },
+];
 
 export function Footer() {
   const { t } = useLanguage();
@@ -45,6 +50,25 @@ export function Footer() {
           <a href={`mailto:${contact.email}`} className="block break-all hover:text-accent">
             {contact.email}
           </a>
+          <div className="pt-4">
+            <p className="text-sm text-white/50">{t.footer.follow}</p>
+            <ul className="mt-3 flex gap-3">
+              {socials.map(({ name, href, Icon }) => (
+                <li key={name}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${t.brand.name} – ${name}`}
+                    title={name}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/80 transition hover:border-accent hover:bg-accent hover:text-navy-deep"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
       <div className="border-t border-white/10">
