@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Loader2, Mail, Phone, Send } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageProvider';
-import { contact, parallaxSet } from '../data/company';
+import { contact, parallaxSet, turnstileSiteKey } from '../data/company';
 import { cn } from '../lib';
 import { ParallaxImage } from './ui/ParallaxImage';
 import { Reveal } from './ui/Reveal';
@@ -11,19 +11,79 @@ type Field = 'name' | 'email' | 'phone' | 'message';
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const empty: Record<Field, string> = { name: '', email: '', phone: '', message: '' };
+/** Same limits as contact.php, so nothing is cut off silently. */
+const maxLength: Record<Field, number> = { name: 200, email: 254, phone: 50, message: 10000 };
+/** Digits (Western, Arabic and Persian/Kurdish), spaces, + - ( ) and dots. */
+const phonePattern = /^\+?[0-9\u0660-\u0669\u06F0-\u06F9\s().-]{6,30}$/;
+
+type TurnstileApi = {
+  render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+  reset: (id?: string) => void;
+  remove: (id?: string) => void;
+};
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
+const TURNSTILE_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
+/** Loads Cloudflare's bot check into `ref` when a site key is set; returns the current token ('' until solved). */
+function useTurnstile(ref: React.RefObject<HTMLDivElement>, language: string) {
+  const [token, setToken] = useState('');
+  const widget = useRef<string>();
+  useEffect(() => {
+    if (!turnstileSiteKey || !ref.current) return;
+    let cancelled = false;
+    const render = () => {
+      if (cancelled || !ref.current || !window.turnstile) return;
+      widget.current = window.turnstile.render(ref.current, {
+        sitekey: turnstileSiteKey,
+        appearance: 'interaction-only',
+        language,
+        callback: (t: string) => setToken(t),
+        'expired-callback': () => setToken(''),
+        'error-callback': () => setToken(''),
+      });
+    };
+    if (window.turnstile) render();
+    else {
+      let script = document.querySelector<HTMLScriptElement>(`script[src="${TURNSTILE_SRC}"]`);
+      if (!script) {
+        script = document.createElement('script');
+        script.src = TURNSTILE_SRC;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      script.addEventListener('load', render);
+    }
+    return () => {
+      cancelled = true;
+      if (widget.current) window.turnstile?.remove(widget.current);
+    };
+  }, [ref, language]);
+  const reset = () => {
+    setToken('');
+    if (widget.current) window.turnstile?.reset(widget.current);
+  };
+  return { token, reset };
+}
 
 export function Contact() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const f = t.contact.form;
   const [values, setValues] = useState<Record<Field, string>>(empty);
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
   const [status, setStatus] = useState<Status>('idle');
   const [honeypot, setHoneypot] = useState('');
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const turnstile = useTurnstile(turnstileRef, lang === 'ar' ? 'ar' : lang === 'en' ? 'en' : 'auto');
 
   const errors: Partial<Record<Field, string>> = {};
   if (!values.name.trim()) errors.name = f.required;
   if (!values.email.trim()) errors.email = f.required;
   else if (!/^\S+@\S+\.\S+$/.test(values.email)) errors.email = f.invalidEmail;
+  if (values.phone.trim() && !phonePattern.test(values.phone.trim())) errors.phone = f.invalidPhone;
   if (!values.message.trim()) errors.message = f.required;
 
   /** Old behaviour: open the visitor's email app with the message ready to send. */
@@ -34,7 +94,7 @@ export function Contact() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTouched({ name: true, email: true, message: true });
+    setTouched({ name: true, email: true, phone: true, message: true });
     if (Object.keys(errors).length || status === 'sending') return;
     setStatus('sending');
     let res: Response;
@@ -42,7 +102,7 @@ export function Contact() {
       res = await fetch('./contact.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ ...values, subject: f.subject, website: honeypot }),
+        body: JSON.stringify({ ...values, subject: f.subject, website: honeypot, turnstile: turnstile.token }),
       });
     } catch {
       // Network error: never leave the visitor stuck.
@@ -58,6 +118,7 @@ export function Contact() {
       return;
     }
     const data = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+    turnstile.reset(); // each bot-check token works only once
     if (res.ok && data?.ok) {
       setStatus('success');
       setValues(empty);
@@ -78,6 +139,7 @@ export function Contact() {
       id: `f-${name}`,
       name,
       value: values[name],
+      maxLength: maxLength[name],
       'aria-invalid': !!err,
       'aria-describedby': err ? `e-${name}` : undefined,
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setValues((v) => ({ ...v, [name]: e.target.value })),
@@ -134,6 +196,7 @@ export function Contact() {
               <div className="sm:col-span-2">{input('phone', f.phone, { type: 'tel', autoComplete: 'tel' })}</div>
               {input('message', f.message, { textarea: true })}
             </div>
+            {turnstileSiteKey && <div ref={turnstileRef} className="mt-5" />}
             <button
               type="submit"
               disabled={status === 'sending'}

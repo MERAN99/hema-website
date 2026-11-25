@@ -27,6 +27,13 @@ export function imgSet(name: string, sizes: string) {
   };
 }
 
+/**
+ * Cloudflare Turnstile (bot check on the contact form). Paste the widget's public "Site Key" here to turn it on,
+ * and put the matching Secret Key on the server in /home/hema/turnstile-secret.txt (outside public_html).
+ * Leave it empty to run the form without it.
+ */
+export const turnstileSiteKey = '0x4AAAAAAGS3MF-xYcKtBxx_';
+
 export const contact = {
   phones: ['07701557702', '07701222351'],
   email: 'info@hemacompany.com',

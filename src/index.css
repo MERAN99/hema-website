@@ -57,6 +57,13 @@ html[dir='rtl'] {
   html {
     -webkit-tap-highlight-color: transparent;
   }
+  /* No "save image" long-press menu on iPhone and no image dragging (see main.tsx). */
+  img,
+  canvas {
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
   body {
     @apply bg-background font-sans text-foreground antialiased;
     text-rendering: optimizeLegibility;
